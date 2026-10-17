@@ -3,12 +3,17 @@ const path = require('path');
 const { db } = require('../db');
 const { logAudit } = require('../middleware/audit');
 
-const BACKUP_DIR = path.resolve(__dirname, '../backups');
-const DB_FILE = path.resolve(__dirname, '../../../dentophilic-website/server/appointments.db');
+const isVercel = !!process.env.VERCEL;
+const BACKUP_DIR = isVercel ? '/tmp/backups' : path.resolve(__dirname, '../backups');
+const DB_FILE = isVercel ? '/tmp/appointments.db' : path.resolve(__dirname, '../../../dentophilic-website/server/appointments.db');
 
 // Ensure backup folder exists
-if (!fs.existsSync(BACKUP_DIR)) {
-  fs.mkdirSync(BACKUP_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(BACKUP_DIR)) {
+    fs.mkdirSync(BACKUP_DIR, { recursive: true });
+  }
+} catch (err) {
+  console.warn('[BackupController] Note on backup directory:', err.message);
 }
 
 /**
