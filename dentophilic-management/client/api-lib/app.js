@@ -23,6 +23,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+const { ensureCloudDbReady } = require('./db');
+// Ensure persistent cloud database is loaded from Vercel Blob before serving requests
+app.use(async (req, res, next) => {
+  try {
+    await ensureCloudDbReady();
+  } catch (err) {
+    console.error('[Cloud DB Middleware Warning]:', err.message);
+  }
+  next();
+});
+
 // Healthcheck
 app.get('/api/health', (req, res) => {
   res.json({
