@@ -14,7 +14,7 @@ export async function apiRequest(endpoint, options = {}) {
     ...(options.headers || {})
   };
 
-  const token = localStorage.getItem('dentophilic_token');
+  const token = sessionStorage.getItem('dentophilic_token');
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
@@ -33,6 +33,8 @@ export async function apiRequest(endpoint, options = {}) {
 
   // If unauthorized, clear token and notify
   if (response.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/setup')) {
+    sessionStorage.removeItem('dentophilic_token');
+    sessionStorage.removeItem('dentophilic_user');
     localStorage.removeItem('dentophilic_token');
     localStorage.removeItem('dentophilic_user');
     window.dispatchEvent(new CustomEvent('auth:expired'));

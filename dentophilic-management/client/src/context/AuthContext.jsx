@@ -6,7 +6,10 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('dentophilic_user');
+      // Clear legacy localStorage from prior sessions
+      localStorage.removeItem('dentophilic_user');
+      localStorage.removeItem('dentophilic_token');
+      const saved = sessionStorage.getItem('dentophilic_user');
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
@@ -29,23 +32,23 @@ export function AuthProvider({ children }) {
         return;
       }
 
-      // 2. If token exists, verify current session
-      const token = localStorage.getItem('dentophilic_token');
+      // 2. If token exists in this tab session, verify current session
+      const token = sessionStorage.getItem('dentophilic_token');
       if (token) {
         try {
           const meRes = await api.get('/auth/me');
           if (meRes.success && meRes.user) {
             setUser(meRes.user);
-            localStorage.setItem('dentophilic_user', JSON.stringify(meRes.user));
+            sessionStorage.setItem('dentophilic_user', JSON.stringify(meRes.user));
           } else {
             setUser(null);
-            localStorage.removeItem('dentophilic_token');
-            localStorage.removeItem('dentophilic_user');
+            sessionStorage.removeItem('dentophilic_token');
+            sessionStorage.removeItem('dentophilic_user');
           }
         } catch (err) {
           setUser(null);
-          localStorage.removeItem('dentophilic_token');
-          localStorage.removeItem('dentophilic_user');
+          sessionStorage.removeItem('dentophilic_token');
+          sessionStorage.removeItem('dentophilic_user');
         }
       } else {
         setUser(null);
@@ -71,8 +74,11 @@ export function AuthProvider({ children }) {
   const login = async (username, password) => {
     const res = await api.post('/auth/login', { username, password });
     if (res.success && res.user && res.token) {
-      localStorage.setItem('dentophilic_token', res.token);
-      localStorage.setItem('dentophilic_user', JSON.stringify(res.user));
+      sessionStorage.setItem('dentophilic_token', res.token);
+      sessionStorage.setItem('dentophilic_user', JSON.stringify(res.user));
+      // Ensure legacy persistent localStorage is cleaned
+      localStorage.removeItem('dentophilic_token');
+      localStorage.removeItem('dentophilic_user');
       setUser(res.user);
       return res.user;
     }
@@ -82,8 +88,10 @@ export function AuthProvider({ children }) {
   const setupFirstAdmin = async (payload) => {
     const res = await api.post('/auth/setup-admin', payload);
     if (res.success && res.user && res.token) {
-      localStorage.setItem('dentophilic_token', res.token);
-      localStorage.setItem('dentophilic_user', JSON.stringify(res.user));
+      sessionStorage.setItem('dentophilic_token', res.token);
+      sessionStorage.setItem('dentophilic_user', JSON.stringify(res.user));
+      localStorage.removeItem('dentophilic_token');
+      localStorage.removeItem('dentophilic_user');
       setUser(res.user);
       setHasAdmin(true);
       return res.user;
@@ -97,6 +105,8 @@ export function AuthProvider({ children }) {
     } catch (e) {
       // ignore network errors on logout
     }
+    sessionStorage.removeItem('dentophilic_token');
+    sessionStorage.removeItem('dentophilic_user');
     localStorage.removeItem('dentophilic_token');
     localStorage.removeItem('dentophilic_user');
     setUser(null);

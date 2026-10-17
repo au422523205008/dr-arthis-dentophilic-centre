@@ -88,8 +88,7 @@ async function setupFirstAdmin(req, res) {
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 8 * 60 * 60 * 1000
+      sameSite: 'lax'
     });
 
     logAudit(req, {
@@ -210,19 +209,17 @@ async function login(req, res) {
       { expiresIn: '7d' }
     );
 
-    // Set HTTP-Only Cookie
+    // Set HTTP-Only Session Cookies (expire when browser/tab session closes)
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 8 * 60 * 60 * 1000
+      sameSite: 'lax'
     });
 
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      sameSite: 'lax'
     });
 
     logAudit({ user, ip: req.ip }, {
