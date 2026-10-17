@@ -1,0 +1,14 @@
+{
+  "name": "dentophilic-ecosystem",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dr. Arthi's Dentophilic Centre - Dual System Orchestrator (Website + Clinic Management System)",
+  "scripts": {
+    "dev:all": "node run-all.js",
+    "dev:website": "npm --prefix dentophilic-website/client run dev",
+    "dev:website:server": "node dentophilic-website/server/server.js",
+    "dev:management": "npm --prefix dentophilic-management/client run dev",
+    "dev:management:server": "node dentophilic-management/server/server.js",
+    "setup:admin": "node dentophilic-management/server/scripts/setup-admin.js"
+  }
+}

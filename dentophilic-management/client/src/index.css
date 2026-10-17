@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  /* Dark Theme (Default) - Obsidian Purple */
+  html.dark, html:not(.light) {
+    --bg-main: #090518;
+    --bg-surface: #12092c;
+    --bg-panel: rgba(22, 13, 46, 0.82);
+    --bg-card: rgba(33, 19, 68, 0.68);
+    --bg-input: rgba(14, 8, 30, 0.75);
+    --border-main: rgba(168, 85, 247, 0.18);
+    --border-hover: rgba(192, 132, 252, 0.35);
+    --text-primary: #f5f3ff;
+    --text-secondary: #c4b5fd;
+    --text-muted: #94a3b8;
+    --accent-primary: #9333ea;
+    --accent-glow: rgba(168, 85, 247, 0.25);
+    color-scheme: dark;
+  }
+
+  /* Light Theme - Elegant Lavender Cream */
+  html.light {
+    --bg-main: #f8f5ff;
+    --bg-surface: #ffffff;
+    --bg-panel: rgba(255, 255, 255, 0.94);
+    --bg-card: rgba(246, 242, 255, 0.85);
+    --bg-input: #ffffff;
+    --border-main: rgba(147, 51, 234, 0.18);
+    --border-hover: rgba(147, 51, 234, 0.4);
+    --text-primary: #1e0e38;
+    --text-secondary: #581c87;
+    --text-muted: #64748b;
+    --accent-primary: #7e22ce;
+    --accent-glow: rgba(126, 34, 206, 0.15);
+    color-scheme: light;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* Custom Purple Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.35);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.7);
+}
+
+/* Theme Adaptive Glassmorphism Helpers */
+.glass-panel {
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-main);
+  box-shadow: 0 10px 30px -10px var(--accent-glow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-main);
+  transition: all 0.2s ease;
+}
+
+.glass-input {
+  background: var(--bg-input);
+  border: 1px solid var(--border-main);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
+  outline: none;
+}
+
+/* Print styling for Prescriptions & Invoices */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-page {
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}

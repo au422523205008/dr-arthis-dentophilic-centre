@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary: #7E22CE;
+    --primary-dark: #6B21A8;
+    --primary-deep: #3B0764;
+    --accent-lavender: #E9D5FF;
+    --accent-lilac: #C084FC;
+    --accent-glow: #DDD6FE;
+    --navy: #0F172A;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1E1B4B;
+    background-color: #FAF5FF;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif-heading {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Elegant CSS Keyframe Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(8px) rotate(-1.5deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(168, 85, 247, 0.25), 0 0 6px -2px rgba(192, 132, 252, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px 4px rgba(168, 85, 247, 0.45), 0 0 14px 0 rgba(192, 132, 252, 0.35);
+  }
+}
+
+@keyframes shimmerGlow {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes auroraWave {
+  0%, 100% {
+    transform: scale(1) translate(0%, 0%);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.15) translate(4%, -3%);
+    opacity: 0.65;
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 7s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3.5s ease-in-out infinite;
+}
+
+.animate-aurora {
+  animation: auroraWave 12s ease-in-out infinite alternate;
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #6B21A8 0%, #A855F7 25%, #C084FC 50%, #7E22CE 75%, #581C87 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmerGlow 7s linear infinite;
+}
+
+/* Lenis smooth scrolling classes */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Glassmorphism helpers for Elegant Purple */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(233, 213, 255, 0.6);
+}
+
+.glass-panel-dark {
+  background: rgba(59, 7, 100, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(216, 180, 254, 0.25);
+}
+
+/* Custom purple scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF5FF;
+}
+::-webkit-scrollbar-thumb {
+  background: #7E22CE;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6B21A8;
+}
