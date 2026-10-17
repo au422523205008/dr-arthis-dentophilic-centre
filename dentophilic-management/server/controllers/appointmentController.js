@@ -190,6 +190,8 @@ function createAppointment(req, res) {
     const referenceId = generateReferenceId();
     const now = new Date().toISOString();
 
+    const initialStatus = source === 'Website' ? 'Pending' : 'Confirmed';
+
     const insertStmt = db.prepare(`
       INSERT INTO appointments (
         referenceId, patientId, name, phone, email, age, gender,
@@ -197,7 +199,7 @@ function createAppointment(req, res) {
         isDeleted, createdAt, updatedAt
       ) VALUES (
         @referenceId, @patientId, @name, @phone, @email, @age, @gender,
-        @service, @date, @timeSlot, @source, @message, @doctorNotes, 'Confirmed',
+        @service, @date, @timeSlot, @source, @message, @doctorNotes, @status,
         0, @now, @now
       )
     `);
@@ -216,6 +218,7 @@ function createAppointment(req, res) {
       source: source || 'Walk-in / Phone / Offline',
       message: message ? message.trim() : null,
       doctorNotes: doctorNotes ? doctorNotes.trim() : null,
+      status: initialStatus,
       now
     });
 

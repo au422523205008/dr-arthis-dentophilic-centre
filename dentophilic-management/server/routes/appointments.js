@@ -3,13 +3,22 @@ const router = express.Router();
 const appointmentController = require('../controllers/appointmentController');
 const { authenticateToken } = require('../middleware/auth');
 
+// Public endpoints (accessible by website visitors without login)
+router.get('/availability', appointmentController.getAvailability);
+
+// Allow both public website booking and authenticated staff booking
+router.post('/', (req, res, next) => {
+  if (req.headers.authorization) {
+    return authenticateToken(req, res, () => appointmentController.createAppointment(req, res));
+  }
+  req.body.source = req.body.source || 'Website';
+  return appointmentController.createAppointment(req, res);
+});
+
+// All subsequent clinical operations require staff authentication
 router.use(authenticateToken);
 
 router.get('/', appointmentController.getAppointments);
-router.post('/', appointmentController.createAppointment);
-
-// Specific GET routes MUST be before /:id parameter
-router.get('/availability', appointmentController.getAvailability);
 
 router.get('/pending-website', (req, res, next) => {
   req.query.source = 'Website';
