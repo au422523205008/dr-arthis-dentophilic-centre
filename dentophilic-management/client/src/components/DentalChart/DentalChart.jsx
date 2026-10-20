@@ -5,14 +5,14 @@ import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 
 const CONDITIONS = [
-  { label: 'Healthy', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40', dot: 'bg-emerald-400' },
-  { label: 'Caries / Cavity', color: 'bg-amber-500/20 text-amber-300 border-amber-500/40', dot: 'bg-amber-400' },
-  { label: 'Filled / Restored', color: 'bg-sky-500/20 text-sky-300 border-sky-500/40', dot: 'bg-sky-400' },
-  { label: 'Root Canal (RCT)', color: 'bg-rose-500/20 text-rose-300 border-rose-500/40', dot: 'bg-rose-400' },
-  { label: 'Crown / Cap', color: 'bg-purple-500/20 text-purple-300 border-purple-500/40', dot: 'bg-purple-400' },
-  { label: 'Implant', color: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', dot: 'bg-indigo-400' },
-  { label: 'Missing', color: 'bg-slate-700/50 text-slate-400 border-slate-600', dot: 'bg-slate-500' },
-  { label: 'Extraction Needed', color: 'bg-red-600/30 text-red-300 border-red-500', dot: 'bg-red-500' }
+  { label: 'Healthy', color: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/40', dot: 'bg-emerald-500' },
+  { label: 'Caries / Cavity', color: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/40', dot: 'bg-amber-500' },
+  { label: 'Filled / Restored', color: 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/40', dot: 'bg-sky-500' },
+  { label: 'Root Canal (RCT)', color: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/40', dot: 'bg-rose-500' },
+  { label: 'Crown / Cap', color: 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/40', dot: 'bg-purple-500' },
+  { label: 'Implant', color: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/40', dot: 'bg-indigo-500' },
+  { label: 'Missing', color: 'bg-slate-500/15 text-slate-700 dark:text-slate-400 border-slate-400 dark:border-slate-600', dot: 'bg-slate-500' },
+  { label: 'Extraction Needed', color: 'bg-red-600/20 text-red-700 dark:text-red-300 border-red-500', dot: 'bg-red-500' }
 ];
 
 export default function DentalChart({ patientId, readOnly = false }) {
@@ -145,7 +145,7 @@ export default function DentalChart({ patientId, readOnly = false }) {
         {/* Legend */}
         <div className="flex flex-wrap gap-2 text-[11px]">
           {CONDITIONS.slice(0, 4).map(c => (
-            <span key={c.label} className="flex items-center gap-1.5 text-slate-300">
+            <span key={c.label} className="flex items-center gap-1.5 text-content-main">
               <span className={`w-2 h-2 rounded-full ${c.dot}`} />
               <span>{c.label}</span>
             </span>
@@ -154,14 +154,14 @@ export default function DentalChart({ patientId, readOnly = false }) {
       </div>
 
       {isLoading ? (
-        <div className="py-12 flex justify-center text-slate-400 text-sm">
+        <div className="py-12 flex justify-center text-content-subtle text-sm">
           Loading patient dental chart...
         </div>
       ) : (
         <div className="space-y-6">
           {/* Maxillary / Upper Arch */}
-          <div className="p-4 rounded-xl bg-slate-950/40 border border-slate-800/80">
-            <div className="text-[11px] font-semibold tracking-wider uppercase text-slate-400 mb-3 text-center">
+          <div className="p-4 rounded-xl bg-purple-50/50 dark:bg-slate-950/40 border border-purple-200/80 dark:border-slate-800/80">
+            <div className="text-[11px] font-semibold tracking-wider uppercase text-purple-900 dark:text-slate-400 mb-3 text-center">
               Maxilla (Upper Jaw)
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -172,7 +172,7 @@ export default function DentalChart({ patientId, readOnly = false }) {
                 {quad2.map(renderToothBox)}
               </div>
             </div>
-            <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-2 px-1">
+            <div className="flex justify-between text-[10px] text-content-subtle font-mono mt-2 px-1">
               <span>Quadrant 1 (Upper Right)</span>
               <span>Midline</span>
               <span>Quadrant 2 (Upper Left)</span>
@@ -180,8 +180,8 @@ export default function DentalChart({ patientId, readOnly = false }) {
           </div>
 
           {/* Mandibular / Lower Arch */}
-          <div className="p-4 rounded-xl bg-slate-950/40 border border-slate-800/80">
-            <div className="text-[11px] font-semibold tracking-wider uppercase text-slate-400 mb-3 text-center">
+          <div className="p-4 rounded-xl bg-purple-50/50 dark:bg-slate-950/40 border border-purple-200/80 dark:border-slate-800/80">
+            <div className="text-[11px] font-semibold tracking-wider uppercase text-purple-900 dark:text-slate-400 mb-3 text-center">
               Mandible (Lower Jaw)
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -192,7 +192,7 @@ export default function DentalChart({ patientId, readOnly = false }) {
                 {quad3.map(renderToothBox)}
               </div>
             </div>
-            <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-2 px-1">
+            <div className="flex justify-between text-[10px] text-content-subtle font-mono mt-2 px-1">
               <span>Quadrant 4 (Lower Right)</span>
               <span>Midline</span>
               <span>Quadrant 3 (Lower Left)</span>

@@ -171,10 +171,10 @@ export default function Prescriptions({ defaultPatient }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Prescriptions (Rx)
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Generate and print official clinic prescriptions on Dr. Arthi's Dentophilic letterhead.
           </p>
         </div>
@@ -232,9 +232,9 @@ export default function Prescriptions({ defaultPatient }) {
                     <button
                       type="button"
                       onClick={() => setViewingRx(rx)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 font-semibold cursor-pointer transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 font-semibold cursor-pointer transition-colors"
                     >
-                      <Printer className="w-3.5 h-3.5" />
+                      <Printer className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
                       <span>View & Print</span>
                     </button>
 
@@ -317,7 +317,7 @@ export default function Prescriptions({ defaultPatient }) {
             {formData.items.map((item, index) => (
               <div
                 key={index}
-                className="p-3 rounded-xl bg-slate-950/40 border border-slate-800 grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center"
+                className="p-3 rounded-xl bg-purple-50/50 dark:bg-slate-950/40 border border-purple-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center"
               >
                 <div className="sm:col-span-4">
                   <input
@@ -326,7 +326,7 @@ export default function Prescriptions({ defaultPatient }) {
                     placeholder="Medicine Name (e.g. Amoxicillin 500mg)"
                     value={item.name}
                     onChange={e => handleUpdateItem(index, 'name', e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-white text-xs"
+                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-xs"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -335,7 +335,7 @@ export default function Prescriptions({ defaultPatient }) {
                     placeholder="Dosage (1 Tab)"
                     value={item.dosage}
                     onChange={e => handleUpdateItem(index, 'dosage', e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-white text-xs"
+                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-xs"
                   />
                 </div>
                 <div className="sm:col-span-3">
@@ -344,7 +344,7 @@ export default function Prescriptions({ defaultPatient }) {
                     placeholder="Frequency (1-0-1)"
                     value={item.frequency}
                     onChange={e => handleUpdateItem(index, 'frequency', e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-white text-xs"
+                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-xs"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -353,14 +353,14 @@ export default function Prescriptions({ defaultPatient }) {
                     placeholder="Duration (5 days)"
                     value={item.duration}
                     onChange={e => handleUpdateItem(index, 'duration', e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-white text-xs"
+                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-xs"
                   />
                 </div>
                 <div className="sm:col-span-1 text-right">
                   <button
                     type="button"
                     onClick={() => handleRemoveItem(index)}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-900 cursor-pointer"
+                    className="p-1.5 rounded-lg text-content-subtle hover:text-rose-500 hover:bg-purple-500/10 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -371,7 +371,7 @@ export default function Prescriptions({ defaultPatient }) {
                     placeholder="Special Instructions (e.g. After food, warm water gargle)"
                     value={item.instructions}
                     onChange={e => handleUpdateItem(index, 'instructions', e.target.value)}
-                    className="w-full px-2.5 py-1 rounded-lg glass-input text-slate-300 text-[11px]"
+                    className="w-full px-2.5 py-1 rounded-lg glass-input text-[11px]"
                   />
                 </div>
               </div>
@@ -379,12 +379,12 @@ export default function Prescriptions({ defaultPatient }) {
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">General Clinical Advice</label>
+            <label className="block font-semibold text-content-main mb-1">General Clinical Advice</label>
             <textarea
               rows={2}
               value={formData.generalAdvice}
               onChange={e => setFormData({ ...formData, generalAdvice: e.target.value })}
-              className="w-full p-2.5 rounded-xl glass-input text-white text-xs resize-none"
+              className="w-full p-2.5 rounded-xl glass-input text-xs resize-none"
             />
           </div>
 

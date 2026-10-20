@@ -92,10 +92,10 @@ export default function Reports() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Clinic Reports & Analytics
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Executive financial statements, monthly revenue vs expense P&L, procedure demand, and CSV backups.
           </p>
         </div>
@@ -106,9 +106,9 @@ export default function Reports() {
             type="button"
             disabled={exportingType === 'patients'}
             onClick={() => handleExportCsv('patients')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
           >
-            <Download className="w-3.5 h-3.5 text-purple-400" />
+            <Download className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
             <span>Export Patients</span>
           </button>
 
@@ -116,9 +116,9 @@ export default function Reports() {
             type="button"
             disabled={exportingType === 'appointments'}
             onClick={() => handleExportCsv('appointments')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
           >
-            <Download className="w-3.5 h-3.5 text-purple-400" />
+            <Download className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
             <span>Export Appointments</span>
           </button>
 
@@ -139,54 +139,54 @@ export default function Reports() {
         <div className="p-5 rounded-2xl glass-card">
           <div className="flex items-center justify-between text-content-subtle text-xs mb-1">
             <span>Gross Revenue (All Time)</span>
-            <DollarSign className="w-4 h-4 text-purple-400" />
+            <DollarSign className="w-4 h-4 text-purple-500 dark:text-purple-400" />
           </div>
           <div className="text-2xl font-bold text-content-main font-mono">
             ₹{(summary.totalRevenue || 0).toLocaleString('en-IN')}
           </div>
-          <span className="text-[11px] text-purple-400 mt-1 block">Invoiced collections</span>
+          <span className="text-[11px] text-purple-500 dark:text-purple-400 mt-1 block">Invoiced collections</span>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card border border-slate-800">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
+        <div className="p-5 rounded-2xl glass-card">
+          <div className="flex items-center justify-between text-content-subtle text-xs mb-1">
             <span>Clinic Expenditures</span>
-            <TrendingDown className="w-4 h-4 text-rose-400" />
+            <TrendingDown className="w-4 h-4 text-rose-500 dark:text-rose-400" />
           </div>
-          <div className="text-2xl font-bold text-rose-300 font-mono">
+          <div className="text-2xl font-bold text-rose-600 dark:text-rose-300 font-mono">
             ₹{(summary.totalExpenses || 0).toLocaleString('en-IN')}
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block">Supplies, lab fees, utilities</span>
+          <span className="text-[11px] text-content-subtle mt-1 block">Supplies, lab fees, utilities</span>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card border border-slate-800">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
+        <div className="p-5 rounded-2xl glass-card">
+          <div className="flex items-center justify-between text-content-subtle text-xs mb-1">
             <span>Net Operating Profit</span>
-            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <Sparkles className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
           </div>
-          <div className="text-2xl font-bold text-emerald-400 font-mono">
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">
             ₹{(summary.netProfit || 0).toLocaleString('en-IN')}
           </div>
-          <span className="text-[11px] text-emerald-400 mt-1 block font-medium">After all recorded expenses</span>
+          <span className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 block font-medium">After all recorded expenses</span>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card border border-slate-800">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
+        <div className="p-5 rounded-2xl glass-card">
+          <div className="flex items-center justify-between text-content-subtle text-xs mb-1">
             <span>Outstanding Due</span>
-            <CreditCard className="w-4 h-4 text-amber-400" />
+            <CreditCard className="w-4 h-4 text-amber-500 dark:text-amber-400" />
           </div>
-          <div className="text-2xl font-bold text-amber-300 font-mono">
+          <div className="text-2xl font-bold text-amber-600 dark:text-amber-300 font-mono">
             ₹{(summary.totalBalanceDue || 0).toLocaleString('en-IN')}
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block">Uncollected patient balances</span>
+          <span className="text-[11px] text-content-subtle mt-1 block">Uncollected patient balances</span>
         </div>
       </div>
 
       {/* MONTHLY REVENUE VS EXPENSES COMPARISON CHART */}
-      <div className="p-6 rounded-2xl glass-panel border border-slate-800">
+      <div className="p-6 rounded-2xl glass-panel">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-bold text-white">Monthly Revenue vs Overhead Expenses</h3>
-            <p className="text-xs text-slate-400">Comparison of cash intake vs operating overhead</p>
+            <h3 className="text-sm font-bold text-content-main">Monthly Revenue vs Overhead Expenses</h3>
+            <p className="text-xs text-content-subtle">Comparison of cash intake vs operating overhead</p>
           </div>
         </div>
 

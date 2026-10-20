@@ -204,10 +204,10 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
       {/* Top Header & Search Controls */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Appointment Bookings
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Manage online website bookings, walk-ins, consultations and schedule queue.
           </p>
         </div>
@@ -247,7 +247,7 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
           <select
             value={filterSource}
             onChange={e => setFilterSource(e.target.value)}
-            className="px-3 py-1.5 rounded-xl glass-input text-white text-xs"
+            className="px-3 py-1.5 rounded-xl glass-input text-xs"
           >
             <option value="ALL">All Sources</option>
             <option value="Website">Website Only</option>
@@ -258,14 +258,14 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
             type="date"
             value={selectedDate}
             onChange={e => setSelectedDate(e.target.value)}
-            className="px-3 py-1.5 rounded-xl glass-input text-white text-xs"
+            className="px-3 py-1.5 rounded-xl glass-input text-xs"
           />
 
           {selectedDate && (
             <button
               type="button"
               onClick={() => setSelectedDate('')}
-              className="text-slate-400 hover:text-white"
+              className="text-content-subtle hover:text-content-main"
             >
               Clear Date
             </button>
@@ -274,9 +274,9 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
       </div>
 
       {/* Appointments List / Table */}
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl overflow-hidden">
         {isLoading ? (
-          <div className="p-12 text-center text-slate-400 text-sm">
+          <div className="p-12 text-center text-content-subtle text-sm">
             Loading appointments...
           </div>
         ) : appointments.length === 0 ? (
@@ -289,7 +289,7 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800 font-semibold">
+              <thead className="bg-purple-50/70 text-purple-900 dark:bg-slate-950/60 dark:text-slate-400 uppercase text-[10px] tracking-wider border-b border-[var(--border-main)] font-semibold">
                 <tr>
                   <th className="p-4">Reference & Patient</th>
                   <th className="p-4">Date & Slot</th>
@@ -299,7 +299,7 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-[var(--border-main)] text-content-main">
                 {appointments.map(apt => (
                   <tr key={apt.id} className="hover:bg-purple-500/5 transition-colors border-b border-[var(--border-main)]">
                     <td className="p-4">
@@ -435,47 +435,47 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
         <form onSubmit={handleCreateAppointment} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Patient Full Name *</label>
+              <label className="block font-semibold text-content-main mb-1">Patient Full Name *</label>
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g. Ramesh Kumar"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Mobile Number (10 Digits) *</label>
+              <label className="block font-semibold text-content-main mb-1">Mobile Number (10 Digits) *</label>
               <input
                 type="text"
                 required
                 value={formData.phone}
                 onChange={e => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="9876543210"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs font-mono"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Age</label>
+              <label className="block font-semibold text-content-main mb-1">Age</label>
               <input
                 type="number"
                 value={formData.age}
                 onChange={e => setFormData({ ...formData, age: e.target.value })}
                 placeholder="32"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               />
             </div>
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Gender</label>
+              <label className="block font-semibold text-content-main mb-1">Gender</label>
               <select
                 value={formData.gender}
                 onChange={e => setFormData({ ...formData, gender: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               >
                 <option value="Not Specified">Not Specified</option>
                 <option value="Male">Male</option>
@@ -484,11 +484,11 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
               </select>
             </div>
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Booking Source</label>
+              <label className="block font-semibold text-content-main mb-1">Booking Source</label>
               <select
                 value={formData.source}
                 onChange={e => setFormData({ ...formData, source: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               >
                 <option value="Walk-in / Clinic">Walk-in / Clinic</option>
                 <option value="Phone Call">Phone Call</option>
@@ -498,12 +498,12 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Treatment / Dental Procedure *</label>
+            <label className="block font-semibold text-content-main mb-1">Treatment / Dental Procedure *</label>
             <select
               required
               value={formData.service}
               onChange={e => setFormData({ ...formData, service: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-xs"
             >
               {services.map(s => (
                 <option key={s.id} value={s.name}>
@@ -515,20 +515,20 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Date *</label>
+              <label className="block font-semibold text-content-main mb-1">Date *</label>
               <input
                 type="date"
                 required
                 value={formData.date}
                 onChange={e => setFormData({ ...formData, date: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block font-semibold text-slate-300">Time Slot *</label>
-                <span className="text-[10px] text-purple-400 font-medium">
+                <label className="block font-semibold text-content-main">Time Slot *</label>
+                <span className="text-[10px] text-purple-500 font-medium">
                   {TIME_SLOTS.filter(s => !bookedSlots.includes(s)).length} Available
                 </span>
               </div>
@@ -536,7 +536,7 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
                 required
                 value={formData.timeSlot}
                 onChange={e => setFormData({ ...formData, timeSlot: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs font-mono"
                 disabled={TIME_SLOTS.filter(s => !bookedSlots.includes(s)).length === 0}
               >
                 {TIME_SLOTS.filter(s => !bookedSlots.includes(s)).length === 0 ? (
@@ -545,7 +545,7 @@ export default function Appointments({ initialTab = 'ALL', onStartTreatment, onI
                   <>
                     <option value="" disabled>-- Select Time Slot --</option>
                     {TIME_SLOTS.filter(s => !bookedSlots.includes(s)).map(t => (
-                      <option key={t} value={t} className="bg-slate-900 text-white">{t}</option>
+                      <option key={t} value={t}>{t}</option>
                     ))}
                   </>
                 )}

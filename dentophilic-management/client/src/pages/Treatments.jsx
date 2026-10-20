@@ -174,10 +174,10 @@ export default function Treatments({ defaultPatient, onVisitCreated }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Clinical Treatments & Services
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Log doctor consultation visits, diagnoses, tooth-specific procedures, and manage clinic pricing fees.
           </p>
         </div>
@@ -197,9 +197,9 @@ export default function Treatments({ defaultPatient, onVisitCreated }) {
                 });
                 setIsServiceModalOpen(true);
               }}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
             >
-              <Plus className="w-4 h-4 text-purple-400" />
+              <Plus className="w-4 h-4 text-purple-500 dark:text-purple-400" />
               <span>Add Procedure</span>
             </button>
           )}
@@ -286,19 +286,19 @@ export default function Treatments({ defaultPatient, onVisitCreated }) {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-950/40 text-slate-300 text-[11px]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-purple-500/5 text-content-main text-[11px] border border-purple-500/10">
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Diagnosis:</span>
-                      <span className="font-medium text-white">{r.diagnosis}</span>
+                      <span className="text-content-subtle block mb-0.5">Diagnosis:</span>
+                      <span className="font-semibold text-content-main">{r.diagnosis}</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Procedure Carried Out:</span>
-                      <span className="font-medium text-white">{r.procedureDone}</span>
+                      <span className="text-content-subtle block mb-0.5">Procedure Carried Out:</span>
+                      <span className="font-semibold text-content-main">{r.procedureDone}</span>
                     </div>
                   </div>
 
                   {r.clinicalNotes && (
-                    <p className="text-slate-300 italic">"{r.clinicalNotes}"</p>
+                    <p className="text-content-subtle italic">"{r.clinicalNotes}"</p>
                   )}
                 </div>
               ))}
@@ -309,10 +309,10 @@ export default function Treatments({ defaultPatient, onVisitCreated }) {
 
       {/* SUB-VIEW 2: SERVICES CATALOG */}
       {activeTab === 'CATALOG' && (
-        <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+        <div className="glass-panel rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/60 text-slate-400 text-[10px] uppercase font-semibold border-b border-slate-800">
+              <thead className="bg-purple-50/70 text-purple-900 dark:bg-slate-950/60 dark:text-slate-400 text-[10px] uppercase font-semibold border-b border-[var(--border-main)]">
                 <tr>
                   <th className="p-4">Service / Dental Procedure</th>
                   <th className="p-4">Category</th>
@@ -321,7 +321,7 @@ export default function Treatments({ defaultPatient, onVisitCreated }) {
                   {canManagePricing && <th className="p-4 text-right">Actions</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/50 text-slate-300">
+              <tbody className="divide-y divide-[var(--border-main)] text-content-main">
                 {services.map(s => (
                   <tr key={s.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="p-4">

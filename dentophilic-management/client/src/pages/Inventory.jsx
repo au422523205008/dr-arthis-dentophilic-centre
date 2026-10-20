@@ -130,10 +130,10 @@ export default function Inventory() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Dental Supplies & Inventory
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Track clinical materials, instruments, stock levels, and automated reorder alerts.
           </p>
         </div>
@@ -152,9 +152,9 @@ export default function Inventory() {
 
       {/* Low Stock Warning Banner */}
       {lowStockCount > 0 && (
-        <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-600/40 flex items-center justify-between gap-4 text-xs text-amber-200">
+        <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-200 dark:bg-amber-950/40 flex items-center justify-between gap-4 text-xs">
           <div className="flex items-center gap-2.5">
-            <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
+            <AlertTriangle className="w-5 h-5 text-amber-500 dark:text-amber-400 shrink-0" />
             <span>
               <strong>Low Stock Alert:</strong> {lowStockCount} items have fallen below their minimum required threshold!
             </span>
@@ -162,7 +162,7 @@ export default function Inventory() {
           <button
             type="button"
             onClick={() => setLowStockOnly(!lowStockOnly)}
-            className="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-semibold cursor-pointer transition-colors"
+            className="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-700 dark:text-amber-300 font-semibold cursor-pointer transition-colors"
           >
             {lowStockOnly ? 'Show All Items' : 'Filter Low Stock'}
           </button>
@@ -170,13 +170,13 @@ export default function Inventory() {
       )}
 
       {/* Filters Bar */}
-      <div className="p-4 rounded-2xl glass-panel border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="p-4 rounded-2xl glass-panel flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2">
-          <span className="text-slate-400">Category:</span>
+          <span className="text-content-subtle">Category:</span>
           <select
             value={filterCategory}
             onChange={e => setFilterCategory(e.target.value)}
-            className="px-3 py-1.5 rounded-xl glass-input text-white text-xs"
+            className="px-3 py-1.5 rounded-xl glass-input text-xs"
           >
             <option value="ALL">All Categories</option>
             <option value="Restorative Materials">Restorative Materials</option>
@@ -193,8 +193,8 @@ export default function Inventory() {
           onClick={() => setLowStockOnly(!lowStockOnly)}
           className={`px-3 py-1.5 rounded-xl font-medium transition-colors cursor-pointer ${
             lowStockOnly
-              ? 'bg-amber-600 text-white'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-amber-600 text-white shadow-sm'
+              : 'text-content-subtle hover:text-content-main hover:bg-purple-500/10'
           }`}
         >
           {lowStockOnly ? '✓ Filtering Low Stock' : 'Filter Low Stock'}
@@ -202,9 +202,9 @@ export default function Inventory() {
       </div>
 
       {/* Inventory Table */}
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl overflow-hidden">
         {isLoading ? (
-          <div className="p-12 text-center text-slate-400 text-sm">Loading stock inventory...</div>
+          <div className="p-12 text-center text-content-subtle text-sm">Loading stock inventory...</div>
         ) : items.length === 0 ? (
           <EmptyState
             icon={Package}
@@ -216,7 +216,7 @@ export default function Inventory() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/60 text-slate-400 text-[10px] uppercase font-semibold border-b border-slate-800">
+              <thead className="bg-purple-50/70 text-purple-900 dark:bg-slate-950/60 dark:text-slate-400 text-[10px] uppercase font-semibold border-b border-[var(--border-main)]">
                 <tr>
                   <th className="p-4">Item Name</th>
                   <th className="p-4">Category</th>
@@ -226,7 +226,7 @@ export default function Inventory() {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/50 text-slate-300">
+              <tbody className="divide-y divide-[var(--border-main)] text-content-main">
                 {items.map(item => {
                   const isLow = item.currentStock <= item.minThreshold;
                   return (

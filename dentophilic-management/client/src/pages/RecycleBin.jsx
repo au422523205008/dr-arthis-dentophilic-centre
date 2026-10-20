@@ -70,19 +70,19 @@ export default function RecycleBin() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold font-serif text-white flex items-center gap-2">
+        <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2">
           <span>Clinic Recycle Bin</span>
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30">
             Soft Delete Protection
           </span>
         </h1>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-content-subtle mt-1">
           Safeguards clinic records against accidental loss. Soft-deleted items can be restored with a single click.
         </p>
       </div>
 
       {/* Filter Tabs */}
-      <div className="p-4 rounded-2xl glass-panel border border-slate-800 flex flex-wrap items-center gap-2 text-xs">
+      <div className="p-4 rounded-2xl glass-panel flex flex-wrap items-center gap-2 text-xs">
         {[
           { id: 'ALL', label: 'All Deleted Items' },
           { id: 'appointment', label: 'Appointments' },
@@ -127,7 +127,7 @@ export default function RecycleBin() {
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
                       {it.entityType}
                     </span>
                     <span className="font-semibold text-content-main text-sm">{it.title}</span>

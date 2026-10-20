@@ -160,10 +160,10 @@ export default function StaffManagement() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Staff Management & Access Control
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Manage Attender/Receptionist accounts, enforce role-based access, and configure custom permissions.
           </p>
         </div>
@@ -193,7 +193,7 @@ export default function StaffManagement() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-purple-500/10 text-content-subtle text-[10px] uppercase font-semibold border-b border-[var(--border-main)]">
+              <thead className="bg-purple-50/70 text-purple-900 dark:bg-purple-500/10 dark:text-content-subtle text-[10px] uppercase font-semibold border-b border-[var(--border-main)]">
                 <tr>
                   <th className="p-4">Staff Member</th>
                   <th className="p-4">Username</th>
@@ -236,7 +236,7 @@ export default function StaffManagement() {
                           setUserPermissions(u.permissions || {});
                           setIsPermModalOpen(true);
                         }}
-                        className="px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 font-medium text-[11px] cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 font-medium text-[11px] cursor-pointer"
                         title="Configure Permissions Matrix"
                       >
                         Permissions

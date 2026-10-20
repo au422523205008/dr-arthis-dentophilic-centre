@@ -100,10 +100,10 @@ export default function Expenses() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Clinic Expenses & Overhead
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Track lab charges, dental consumable bills, utility overheads, and clinic expenditures.
           </p>
         </div>
@@ -120,23 +120,23 @@ export default function Expenses() {
 
       {/* Summary Card & Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-2xl glass-card border border-slate-800">
-          <div className="text-slate-400 text-xs mb-1">Total Recorded Expenses</div>
-          <div className="text-2xl font-bold text-white font-mono">
+        <div className="p-5 rounded-2xl glass-card">
+          <div className="text-content-subtle text-xs mb-1">Total Recorded Expenses</div>
+          <div className="text-2xl font-bold text-content-main font-mono">
             ₹{totalAmount.toLocaleString('en-IN')}
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block font-mono">
+          <span className="text-[11px] text-content-subtle mt-1 block font-mono">
             {expenses.length} transaction(s)
           </span>
         </div>
 
-        <div className="sm:col-span-2 p-5 rounded-2xl glass-panel border border-slate-800 flex items-center justify-between gap-4">
+        <div className="sm:col-span-2 p-5 rounded-2xl glass-panel flex items-center justify-between gap-4">
           <div>
-            <span className="text-xs text-slate-400 font-semibold block mb-1.5">Filter by Category:</span>
+            <span className="text-xs text-content-subtle font-semibold block mb-1.5">Filter by Category:</span>
             <select
               value={filterCategory}
               onChange={e => setFilterCategory(e.target.value)}
-              className="px-3 py-1.5 rounded-xl glass-input text-white text-xs"
+              className="px-3 py-1.5 rounded-xl glass-input text-xs"
             >
               <option value="ALL">All Categories</option>
               <option value="Dental Supplies & Lab Fees">Dental Supplies & Lab Fees</option>
@@ -152,9 +152,9 @@ export default function Expenses() {
       </div>
 
       {/* Expenses Table */}
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl overflow-hidden">
         {isLoading ? (
-          <div className="p-12 text-center text-slate-400 text-sm">Loading expenses...</div>
+          <div className="p-12 text-center text-content-subtle text-sm">Loading expenses...</div>
         ) : expenses.length === 0 ? (
           <EmptyState
             icon={Receipt}
@@ -166,7 +166,7 @@ export default function Expenses() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/60 text-slate-400 text-[10px] uppercase font-semibold border-b border-slate-800">
+              <thead className="bg-purple-50/70 text-purple-900 dark:bg-slate-950/60 dark:text-slate-400 text-[10px] uppercase font-semibold border-b border-[var(--border-main)]">
                 <tr>
                   <th className="p-4">Date</th>
                   <th className="p-4">Category</th>
@@ -176,7 +176,7 @@ export default function Expenses() {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/50 text-slate-300">
+              <tbody className="divide-y divide-[var(--border-main)] text-content-main">
                 {expenses.map(exp => (
                   <tr key={exp.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="p-4 font-mono text-slate-300">

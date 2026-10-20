@@ -218,10 +218,10 @@ export default function Billing({ defaultPatient }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Billing & Invoices
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Issue itemized dental invoices, record installment payments, and print patient receipts.
           </p>
         </div>
@@ -256,21 +256,21 @@ export default function Billing({ defaultPatient }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Search className="w-4 h-4 text-slate-400" />
+          <Search className="w-4 h-4 text-purple-400" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search invoice # or patient name..."
-            className="px-3 py-1.5 rounded-xl glass-input text-white text-xs"
+            className="px-3 py-1.5 rounded-xl glass-input text-xs"
           />
         </div>
       </div>
 
       {/* Invoices List */}
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl overflow-hidden">
         {isLoading ? (
-          <div className="p-12 text-center text-slate-400 text-sm">Loading billing records...</div>
+          <div className="p-12 text-center text-content-subtle text-sm">Loading billing records...</div>
         ) : invoices.length === 0 ? (
           <EmptyState
             icon={CreditCard}
@@ -282,7 +282,7 @@ export default function Billing({ defaultPatient }) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/60 text-slate-400 text-[10px] uppercase font-semibold border-b border-slate-800">
+              <thead className="bg-purple-50/70 text-purple-900 dark:bg-slate-950/60 dark:text-slate-400 text-[10px] uppercase font-semibold border-b border-[var(--border-main)]">
                 <tr>
                   <th className="p-4">Invoice # & Date</th>
                   <th className="p-4">Patient</th>

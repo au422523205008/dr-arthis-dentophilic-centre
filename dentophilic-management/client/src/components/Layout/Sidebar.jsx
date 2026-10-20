@@ -129,10 +129,10 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
     >
       <div>
         {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-purple-900/20">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-purple-100 dark:border-purple-900/20">
           {!isCollapsed ? (
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="w-10 h-10 rounded-xl bg-white p-1 border border-purple-300 dark:border-purple-600/40 flex items-center justify-center shrink-0 shadow-sm shadow-purple-600/20">
+              <div className="w-10 h-10 rounded-xl bg-white p-1 border border-purple-200 dark:border-purple-600/40 flex items-center justify-center shrink-0 shadow-sm shadow-purple-600/10">
                 <img
                   src="/clinic-logo.jpg"
                   alt="Dr. Arthi's Dentophilic Centre Logo"
@@ -143,13 +143,13 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
                 <span className="font-serif font-bold text-sm truncate block text-slate-900 dark:text-purple-100">
                   Dentophilic Centre
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-medium tracking-wide block truncate">
+                <span className="text-[10px] text-purple-700 dark:text-purple-400 font-medium tracking-wide block truncate">
                   Dr. Arthi Mukeshkannan
                 </span>
               </div>
             </div>
           ) : (
-            <div className="w-10 h-10 mx-auto rounded-xl bg-white p-1 border border-purple-300 dark:border-purple-600/40 flex items-center justify-center shadow-sm">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-white p-1 border border-purple-200 dark:border-purple-600/40 flex items-center justify-center shadow-sm">
               <img
                 src="/clinic-logo.jpg"
                 alt="Logo"
@@ -161,7 +161,7 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
           <button
             type="button"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-500 hover:text-purple-700 hover:bg-purple-50 dark:text-slate-400 dark:hover:text-purple-400 dark:hover:bg-purple-500/10 transition-colors cursor-pointer"
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -180,14 +180,16 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
                 onClick={() => setActiveTab(item.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer group ${
                   isActive
-                    ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/40 shadow-sm shadow-purple-600/10'
-                    : 'text-slate-400 hover:text-purple-300 hover:bg-purple-500/10 border border-transparent'
+                    ? 'bg-purple-50 text-purple-800 border border-purple-200 shadow-sm dark:bg-purple-600/20 dark:text-purple-300 dark:border-purple-500/40 dark:shadow-purple-600/10'
+                    : 'text-slate-600 hover:text-purple-700 hover:bg-purple-50/70 border border-transparent dark:text-slate-400 dark:hover:text-purple-300 dark:hover:bg-purple-500/10'
                 }`}
                 title={isCollapsed ? item.label : undefined}
               >
                 <Icon
                   className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${
-                    isActive ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400'
+                    isActive
+                      ? 'text-purple-700 dark:text-purple-400'
+                      : 'text-slate-500 dark:text-slate-400 group-hover:text-purple-700 dark:group-hover:text-purple-300'
                   }`}
                 />
                 {!isCollapsed && (
@@ -207,7 +209,7 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
       </div>
 
       {/* Footer Role Badge */}
-      <div className="p-3 border-t border-purple-900/20">
+      <div className="p-3 border-t border-purple-100 dark:border-purple-900/20">
         <div
           className={`flex items-center gap-2.5 p-2 rounded-xl glass-card ${
             isCollapsed ? 'justify-center' : ''
@@ -216,18 +218,18 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
           <div
             className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
               isAdmin
-                ? 'bg-purple-500/20 text-purple-400 dark:text-purple-300 border border-purple-500/40'
-                : 'bg-indigo-500/20 text-indigo-400 dark:text-indigo-300 border border-indigo-500/40'
+                ? 'bg-purple-100 text-purple-700 border border-purple-200 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/40'
+                : 'bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/40'
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
           </div>
           {!isCollapsed && (
             <div className="truncate text-left leading-tight">
-              <div className="text-xs font-semibold truncate text-content-main">
+              <div className="text-xs font-semibold truncate text-slate-800 dark:text-content-main">
                 {user?.name || (isAdmin ? "Dr. Arthi Mukeshkannan" : 'Attender Staff')}
               </div>
-              <div className={`text-[10px] font-mono ${isAdmin ? 'text-purple-400' : 'text-indigo-400'}`}>
+              <div className={`text-[10px] font-mono ${isAdmin ? 'text-purple-700 dark:text-purple-400' : 'text-indigo-700 dark:text-indigo-400'}`}>
                 {user?.role === 'ATTENDER' ? 'Attender / Reception' : 'Doctor / Admin'}
               </div>
             </div>

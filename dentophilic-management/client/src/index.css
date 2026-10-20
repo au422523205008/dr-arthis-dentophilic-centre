@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -11,33 +13,37 @@
   html.dark, html:not(.light) {
     --bg-main: #090518;
     --bg-surface: #12092c;
-    --bg-panel: rgba(22, 13, 46, 0.82);
+    --bg-panel: rgba(22, 13, 46, 0.85);
     --bg-card: rgba(33, 19, 68, 0.68);
     --bg-input: rgba(14, 8, 30, 0.75);
     --border-main: rgba(168, 85, 247, 0.18);
     --border-hover: rgba(192, 132, 252, 0.35);
-    --text-primary: #f5f3ff;
+    --text-primary: #f8fafc;
     --text-secondary: #c4b5fd;
     --text-muted: #94a3b8;
     --accent-primary: #9333ea;
     --accent-glow: rgba(168, 85, 247, 0.25);
+    --table-header-bg: rgba(14, 8, 30, 0.75);
+    --table-row-hover: rgba(168, 85, 247, 0.08);
     color-scheme: dark;
   }
 
-  /* Light Theme - Elegant Lavender Cream */
+  /* Light Theme - Clean Clinic Lavender & Slate */
   html.light {
-    --bg-main: #f8f5ff;
+    --bg-main: #f8f6fc;
     --bg-surface: #ffffff;
-    --bg-panel: rgba(255, 255, 255, 0.94);
-    --bg-card: rgba(246, 242, 255, 0.85);
+    --bg-panel: #ffffff;
+    --bg-card: #ffffff;
     --bg-input: #ffffff;
-    --border-main: rgba(147, 51, 234, 0.18);
-    --border-hover: rgba(147, 51, 234, 0.4);
-    --text-primary: #1e0e38;
-    --text-secondary: #581c87;
+    --border-main: #e4ddf2;
+    --border-hover: #c4b5fd;
+    --text-primary: #150a2e;
+    --text-secondary: #4c1d95;
     --text-muted: #64748b;
     --accent-primary: #7e22ce;
-    --accent-glow: rgba(126, 34, 206, 0.15);
+    --accent-glow: rgba(126, 34, 206, 0.08);
+    --table-header-bg: #f4f0fa;
+    --table-row-hover: #faf7ff;
     color-scheme: light;
   }
 
@@ -46,7 +52,7 @@
     background-color: var(--bg-main);
     color: var(--text-primary);
     overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
@@ -75,8 +81,9 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-main);
-  box-shadow: 0 10px 30px -10px var(--accent-glow);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 25px -5px var(--accent-glow);
+  color: var(--text-primary);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
 .glass-card {
@@ -84,20 +91,178 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-main);
+  color: var(--text-primary);
   transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--border-hover);
 }
 
 .glass-input {
   background: var(--bg-input);
   border: 1px solid var(--border-main);
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   transition: all 0.2s ease;
 }
 
+.glass-input::placeholder {
+  color: var(--text-muted);
+}
+
 .glass-input:focus {
-  border-color: #a855f7;
-  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
+  border-color: #9333ea;
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.25);
   outline: none;
+}
+
+/* Content Semantic Color Helpers */
+.text-content-main {
+  color: var(--text-primary);
+}
+
+.text-content-subtle {
+  color: var(--text-muted);
+}
+
+.text-content-secondary {
+  color: var(--text-secondary);
+}
+
+/* Light Theme Precision Overrides - ensures cohesive clinic look */
+html.light .glass-panel {
+  background-color: #ffffff !important;
+  border-color: #e4ddf2 !important;
+  box-shadow: 0 4px 20px -3px rgba(126, 34, 206, 0.07), 0 2px 6px -2px rgba(0, 0, 0, 0.04) !important;
+  color: #150a2e !important;
+}
+
+html.light .glass-card {
+  background-color: #ffffff !important;
+  border-color: #e4ddf2 !important;
+  box-shadow: 0 2px 10px -2px rgba(126, 34, 206, 0.05) !important;
+  color: #150a2e !important;
+}
+
+html.light .glass-card:hover {
+  border-color: #c4b5fd !important;
+}
+
+html.light .glass-input {
+  background-color: #ffffff !important;
+  color: #150a2e !important;
+  border-color: #d8cde9 !important;
+}
+
+html.light .glass-input:focus {
+  border-color: #7e22ce !important;
+  box-shadow: 0 0 0 2px rgba(126, 34, 206, 0.2) !important;
+}
+
+/* Light form elements & options */
+html.light select,
+html.light input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #150a2e !important;
+  border-color: #d8cde9 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder,
+html.light .glass-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.light option {
+  background-color: #ffffff !important;
+  color: #150a2e !important;
+}
+
+/* Light Table styling */
+html.light thead,
+html.light thead th,
+html.light th {
+  background-color: #f4f0fa !important;
+  color: #4c1d95 !important;
+  border-bottom: 1px solid #e4ddf2 !important;
+}
+
+html.light tbody tr {
+  border-bottom-color: #f0eaf8 !important;
+}
+
+html.light tbody tr:hover {
+  background-color: #faf7ff !important;
+}
+
+html.light tbody td {
+  color: #150a2e !important;
+}
+
+/* Universal Slate & Dark background substring reconciliation in Light mode */
+html.light [class*="bg-slate-950"],
+html.light [class*="bg-slate-900"] {
+  background-color: #f7f4fc !important;
+  color: #150a2e !important;
+  border-color: #e4ddf2 !important;
+}
+
+html.light [class*="bg-slate-800"] {
+  background-color: #f0eaf8 !important;
+  color: #3b0764 !important;
+  border-color: #e4ddf2 !important;
+}
+
+html.light [class*="bg-purple-950"] {
+  background-color: #f5f0fb !important;
+  color: #3b0764 !important;
+  border-color: #e4ddf2 !important;
+}
+
+/* Alert boxes in Light Mode */
+html.light [class*="bg-amber-950"] {
+  background-color: #fefce8 !important;
+  border-color: #fde047 !important;
+  color: #854d0e !important;
+}
+
+html.light [class*="bg-rose-950"] {
+  background-color: #fff1f2 !important;
+  border-color: #fecdd3 !important;
+  color: #9f1239 !important;
+}
+
+/* Borders in Light Mode */
+html.light [class*="border-slate-800"],
+html.light [class*="border-slate-700"],
+html.light [class*="border-slate-900"],
+html.light [class*="border-purple-900"] {
+  border-color: #e4ddf2 !important;
+}
+
+/* Text color contrast adjustments in Light Mode */
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #150a2e !important;
+}
+
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400 {
+  color: #64748b !important;
+}
+
+html.light .text-slate-500 {
+  color: #64748b !important;
+}
+
+html.light .divide-slate-800\/50 > :not([hidden]) ~ :not([hidden]),
+html.light .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]),
+html.light .divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #f0eaf8 !important;
 }
 
 /* Print styling for Prescriptions & Invoices */

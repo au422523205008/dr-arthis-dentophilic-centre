@@ -116,10 +116,10 @@ export default function FollowUps() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Patient Follow-ups & Recalls
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Automate post-treatment care check-ins and 6-month routine cleaning recalls via click-to-chat WhatsApp.
           </p>
         </div>
@@ -179,10 +179,10 @@ export default function FollowUps() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-content-main text-sm">{fu.patientName}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-purple-500/10 font-mono text-[10px] text-purple-400 border border-purple-500/20">
+                    <span className="px-2 py-0.5 rounded-full bg-purple-500/10 font-mono text-[10px] text-purple-700 dark:text-purple-400 border border-purple-500/20">
                       {fu.formattedPatientId}
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-semibold text-[10px]">
+                    <span className="px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-700 dark:text-purple-300 font-semibold text-[10px]">
                       {fu.type}
                     </span>
                   </div>
@@ -206,7 +206,7 @@ export default function FollowUps() {
                   <button
                     type="button"
                     onClick={() => handleOpenWhatsApp(fu)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 font-semibold cursor-pointer transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-semibold cursor-pointer transition-colors"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
                     <span>WhatsApp</span>
@@ -216,7 +216,7 @@ export default function FollowUps() {
                     <button
                       type="button"
                       onClick={() => handleUpdateStatus(fu.id, 'Completed')}
-                      className="px-2.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 font-semibold cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 font-semibold cursor-pointer"
                     >
                       Mark Contacted
                     </button>
@@ -237,12 +237,12 @@ export default function FollowUps() {
       >
         <form onSubmit={handleCreateFollowUp} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Select Patient *</label>
+            <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Select Patient *</label>
             <select
               required
               value={formData.patientId}
               onChange={e => setFormData({ ...formData, patientId: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-slate-900 dark:text-white text-xs"
             >
               <option value="">Choose patient...</option>
               {patients.map(p => (
@@ -255,11 +255,11 @@ export default function FollowUps() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Reminder Type</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Reminder Type</label>
               <select
                 value={formData.type}
                 onChange={e => setFormData({ ...formData, type: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-slate-900 dark:text-white text-xs"
               >
                 <option value="Post-Procedure Care Check">Post-Procedure Care Check</option>
                 <option value="6-Month Recall">6-Month Routine Cleaning Recall</option>
@@ -270,25 +270,25 @@ export default function FollowUps() {
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Due Date *</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Due Date *</label>
               <input
                 type="date"
                 required
                 value={formData.dueDate}
                 onChange={e => setFormData({ ...formData, dueDate: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-slate-900 dark:text-white text-xs"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Care Notes</label>
+            <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Care Notes</label>
             <textarea
               rows={2}
               value={formData.notes}
               onChange={e => setFormData({ ...formData, notes: e.target.value })}
               placeholder="e.g. Check for swelling or post-op pain after extraction..."
-              className="w-full p-2.5 rounded-xl glass-input text-white text-xs resize-none"
+              className="w-full p-2.5 rounded-xl glass-input text-slate-900 dark:text-white text-xs resize-none"
             />
           </div>
 
@@ -296,7 +296,7 @@ export default function FollowUps() {
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-slate-400 hover:text-white"
+              className="px-4 py-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
             >
               Cancel
             </button>

@@ -209,26 +209,26 @@ export default function Dashboard({ onNavigateToAppointments, onNavigateToPatien
             <span className="text-[11px] text-purple-400 mt-1 block">Current billing cycle</span>
           </div>
 
-          <div className="p-5 rounded-2xl glass-card border border-slate-800">
-            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+          <div className="p-5 rounded-2xl glass-card">
+            <div className="flex items-center justify-between text-content-subtle text-xs mb-2">
               <span>Pending Balances Due</span>
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
             </div>
-            <div className="text-2xl font-bold text-amber-300 font-mono">
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-300 font-mono">
               ₹{(financials.pendingBalancesDue || 0).toLocaleString('en-IN')}
             </div>
-            <span className="text-[11px] text-slate-400 mt-1 block">Unpaid invoices</span>
+            <span className="text-[11px] text-content-subtle mt-1 block">Unpaid invoices</span>
           </div>
 
-          <div className="p-5 rounded-2xl glass-card border border-slate-800">
-            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+          <div className="p-5 rounded-2xl glass-card">
+            <div className="flex items-center justify-between text-content-subtle text-xs mb-2">
               <span>Net Profit (This Month)</span>
-              <Sparkles className="w-4 h-4 text-cyan-400" />
+              <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
             </div>
-            <div className="text-2xl font-bold text-cyan-300 font-mono">
+            <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-300 font-mono">
               ₹{(financials.netProfitThisMonth || 0).toLocaleString('en-IN')}
             </div>
-            <span className="text-[11px] text-slate-400 mt-1 block">
+            <span className="text-[11px] text-content-subtle mt-1 block">
               After ₹{(financials.expensesThisMonth || 0).toLocaleString('en-IN')} expenses
             </span>
           </div>
@@ -237,21 +237,21 @@ export default function Dashboard({ onNavigateToAppointments, onNavigateToPatien
 
       {/* OPERATIONS STATS (Both Roles) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl glass-card border border-slate-800">
-          <div className="text-slate-400 text-xs mb-1">Today's Visits</div>
-          <div className="text-2xl font-bold text-white font-mono">{today.total || 0}</div>
+        <div className="p-4 rounded-2xl glass-card">
+          <div className="text-content-subtle text-xs mb-1">Today's Visits</div>
+          <div className="text-2xl font-bold text-content-main font-mono">{today.total || 0}</div>
         </div>
-        <div className="p-4 rounded-2xl glass-card border border-slate-800">
-          <div className="text-slate-400 text-xs mb-1">In Treatment</div>
-          <div className="text-2xl font-bold text-cyan-400 font-mono">{today.byStatus?.['In-Treatment'] || 0}</div>
+        <div className="p-4 rounded-2xl glass-card">
+          <div className="text-content-subtle text-xs mb-1">In Treatment</div>
+          <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400 font-mono">{today.byStatus?.['In-Treatment'] || 0}</div>
         </div>
-        <div className="p-4 rounded-2xl glass-card border border-slate-800">
-          <div className="text-slate-400 text-xs mb-1">Completed Today</div>
-          <div className="text-2xl font-bold text-emerald-400 font-mono">{today.byStatus?.['Completed'] || 0}</div>
+        <div className="p-4 rounded-2xl glass-card">
+          <div className="text-content-subtle text-xs mb-1">Completed Today</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">{today.byStatus?.['Completed'] || 0}</div>
         </div>
-        <div className="p-4 rounded-2xl glass-card border border-slate-800">
-          <div className="text-slate-400 text-xs mb-1">Pending Web Bookings</div>
-          <div className="text-2xl font-bold text-rose-400 font-mono">{pendingWebsiteCount}</div>
+        <div className="p-4 rounded-2xl glass-card">
+          <div className="text-content-subtle text-xs mb-1">Pending Web Bookings</div>
+          <div className="text-2xl font-bold text-rose-600 dark:text-rose-400 font-mono">{pendingWebsiteCount}</div>
         </div>
       </div>
 
@@ -316,21 +316,21 @@ export default function Dashboard({ onNavigateToAppointments, onNavigateToPatien
               {pendingWebsiteBookings.map(b => (
                 <div
                   key={b.id}
-                  className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition-all text-xs"
+                  className="p-3.5 rounded-xl glass-card border border-purple-500/15 hover:border-purple-500/35 transition-all text-xs"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
-                      <div className="font-semibold text-white text-sm">{b.name}</div>
-                      <div className="text-slate-400 text-[11px] font-mono">{b.referenceId} • {b.phone}</div>
+                      <div className="font-semibold text-content-main text-sm">{b.name}</div>
+                      <div className="text-content-subtle text-[11px] font-mono">{b.referenceId} • {b.phone}</div>
                     </div>
                     <Badge status={b.status} />
                   </div>
 
-                  <div className="p-2 rounded-lg bg-slate-950/50 text-[11px] text-slate-300 space-y-1 mb-3">
-                    <div><span className="text-slate-400">Treatment:</span> {b.service}</div>
-                    <div><span className="text-slate-400">Slot:</span> {b.date} at {b.timeSlot}</div>
+                  <div className="p-2.5 rounded-lg bg-purple-500/5 text-[11px] text-content-main space-y-1 mb-3 border border-purple-500/10">
+                    <div><span className="text-content-subtle">Treatment:</span> {b.service}</div>
+                    <div><span className="text-content-subtle">Slot:</span> {b.date} at {b.timeSlot}</div>
                     {b.message && (
-                      <div className="italic text-slate-400 truncate">"{b.message}"</div>
+                      <div className="italic text-content-subtle truncate">"{b.message}"</div>
                     )}
                   </div>
 
@@ -400,7 +400,7 @@ export default function Dashboard({ onNavigateToAppointments, onNavigateToPatien
                           </span>
                         )}
                       </div>
-                      <div className="text-slate-400 text-[11px]">
+                      <div className="text-content-subtle text-[11px]">
                         {apt.service} • {apt.phone}
                       </div>
                     </div>
@@ -439,14 +439,14 @@ export default function Dashboard({ onNavigateToAppointments, onNavigateToPatien
 
       {/* INVENTORY ALERTS (If any item is low stock) */}
       {inventoryAlerts.lowStockCount > 0 && (
-        <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-600/40 flex items-center justify-between gap-3 text-xs text-amber-200">
+        <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-200 dark:bg-amber-950/40 flex items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
             <span>
               <strong>Inventory Notice:</strong> {inventoryAlerts.lowStockCount} items are running below minimum threshold level.
             </span>
           </div>
-          <span className="text-[11px] font-semibold text-amber-300">Restock needed</span>
+          <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-300">Restock needed</span>
         </div>
       )}
     </div>

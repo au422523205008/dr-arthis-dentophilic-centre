@@ -201,7 +201,7 @@ export default function SettingsAndBackup() {
                 className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
                   isDark
                     ? 'border-purple-500 bg-purple-950/40 shadow-xl shadow-purple-950/50 ring-2 ring-purple-500/50'
-                    : 'border-purple-900/30 bg-slate-900/40 hover:border-purple-500/50'
+                    : 'border-slate-200 dark:border-purple-900/30 bg-slate-50 dark:bg-slate-900/40 hover:border-purple-400'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
@@ -210,8 +210,8 @@ export default function SettingsAndBackup() {
                       <Moon className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-sm text-white">Obsidian Purple (Dark)</h3>
-                      <span className="text-[11px] text-purple-300/80">Default Clinical Mode</span>
+                      <h3 className="font-bold text-sm text-content-main">Obsidian Purple (Dark)</h3>
+                      <span className="text-[11px] text-purple-500 dark:text-purple-300/80">Default Clinical Mode</span>
                     </div>
                   </div>
                   {isDark && (
@@ -221,7 +221,7 @@ export default function SettingsAndBackup() {
                   )}
                 </div>
 
-                <p className="text-xs text-slate-300 leading-relaxed mb-4">
+                <p className="text-xs text-content-subtle leading-relaxed mb-4">
                   Rich dark plum & obsidian background with glowing violet highlights. Optimal for clinical rooms and evening reception shifts.
                 </p>
 
@@ -245,8 +245,8 @@ export default function SettingsAndBackup() {
                 }}
                 className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
                   isLight
-                    ? 'border-purple-600 bg-purple-50 shadow-xl shadow-purple-600/15 ring-2 ring-purple-600/40'
-                    : 'border-purple-900/20 bg-slate-800/20 hover:border-purple-500/50'
+                    ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20 shadow-xl shadow-purple-600/15 ring-2 ring-purple-600/40'
+                    : 'border-slate-200 dark:border-purple-900/20 bg-slate-50 dark:bg-slate-800/20 hover:border-purple-400'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
@@ -255,7 +255,7 @@ export default function SettingsAndBackup() {
                       <Sun className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-sm">Lavender Pearl (Light)</h3>
+                      <h3 className="font-bold text-sm text-content-main">Lavender Pearl (Light)</h3>
                       <span className="text-[11px] opacity-75">Clean Medical Daylight</span>
                     </div>
                   </div>
@@ -266,7 +266,7 @@ export default function SettingsAndBackup() {
                   )}
                 </div>
 
-                <p className="text-xs opacity-75 leading-relaxed mb-4">
+                <p className="text-xs text-content-subtle leading-relaxed mb-4">
                   Pristine bright clinic aesthetic with soft lavender cream cards, high-contrast dark violet text, and purple dental accents.
                 </p>
 

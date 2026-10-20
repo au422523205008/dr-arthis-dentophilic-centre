@@ -150,10 +150,10 @@ export default function Patients({ onNewAppointment, onNewInvoice, onNewTreatmen
       {/* Header and Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
             Patient Directory (EMR)
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-content-subtle mt-1">
             Complete electronic medical records, clinical dental charts, treatment timelines, and billing history.
           </p>
         </div>
@@ -163,10 +163,10 @@ export default function Patients({ onNewAppointment, onNewInvoice, onNewTreatmen
             <button
               type="button"
               onClick={() => setIsMergeModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
               title="Merge duplicate patient profiles"
             >
-              <GitMerge className="w-3.5 h-3.5 text-purple-400" />
+              <GitMerge className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
               <span>Merge Profiles</span>
             </button>
           )}
@@ -305,28 +305,28 @@ export default function Patients({ onNewAppointment, onNewInvoice, onNewTreatmen
                 value={formData.phone}
                 onChange={e => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="9597126248"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs font-mono"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Age</label>
+              <label className="block font-semibold text-content-main mb-1">Age</label>
               <input
                 type="number"
                 value={formData.age}
                 onChange={e => setFormData({ ...formData, age: e.target.value })}
                 placeholder="28"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               />
             </div>
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Gender</label>
+              <label className="block font-semibold text-content-main mb-1">Gender</label>
               <select
                 value={formData.gender}
                 onChange={e => setFormData({ ...formData, gender: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               >
                 <option value="Not Specified">Not Specified</option>
                 <option value="Male">Male</option>
@@ -335,62 +335,62 @@ export default function Patients({ onNewAppointment, onNewInvoice, onNewTreatmen
               </select>
             </div>
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Blood Group</label>
+              <label className="block font-semibold text-content-main mb-1">Blood Group</label>
               <input
                 type="text"
                 value={formData.bloodGroup}
                 onChange={e => setFormData({ ...formData, bloodGroup: e.target.value })}
                 placeholder="e.g. O+, A+"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Email Address</label>
+            <label className="block font-semibold text-content-main mb-1">Email Address</label>
             <input
               type="email"
               value={formData.email}
               onChange={e => setFormData({ ...formData, email: e.target.value })}
               placeholder="patient@example.com"
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-xs"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Known Drug Allergies</label>
+            <label className="block font-semibold text-content-main mb-1">Known Drug Allergies</label>
             <input
               type="text"
               value={formData.allergies}
               onChange={e => setFormData({ ...formData, allergies: e.target.value })}
               placeholder="e.g. Penicillin, Aspirin, Sulfa drugs..."
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-xs"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Systemic Medical History</label>
+            <label className="block font-semibold text-content-main mb-1">Systemic Medical History</label>
             <textarea
               rows={2}
               value={formData.medicalHistory}
               onChange={e => setFormData({ ...formData, medicalHistory: e.target.value })}
               placeholder="e.g. Diabetic, High BP, Asthma, Cardiac issues..."
-              className="w-full p-2.5 rounded-xl glass-input text-white text-xs resize-none"
+              className="w-full p-2.5 rounded-xl glass-input text-xs resize-none"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Address</label>
+            <label className="block font-semibold text-content-main mb-1">Address</label>
             <input
               type="text"
               value={formData.address}
               onChange={e => setFormData({ ...formData, address: e.target.value })}
               placeholder="e.g. Hosur, Tamil Nadu"
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-xs"
             />
           </div>
 
-          <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-800">
+          <div className="flex justify-end gap-2.5 pt-3 border-t border-[var(--border-main)]">
             <button
               type="button"
               onClick={() => setIsRegisterModalOpen(false)}

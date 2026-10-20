@@ -211,7 +211,7 @@ function MainApp() {
 
   // 3. Authenticated -> Full Management Workspace
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] flex transition-colors duration-200">
       {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
@@ -352,44 +352,44 @@ function MainApp() {
         <form onSubmit={handleQuickWalkInSubmit} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Patient Full Name *</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Patient Full Name *</label>
               <input
                 type="text"
                 required
                 value={walkInForm.name}
                 onChange={e => setWalkInForm({ ...walkInForm, name: e.target.value })}
                 placeholder="Patient Name"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               />
             </div>
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Mobile Number (10 Digits) *</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Mobile Number (10 Digits) *</label>
               <input
                 type="text"
                 required
                 value={walkInForm.phone}
                 onChange={e => setWalkInForm({ ...walkInForm, phone: e.target.value })}
                 placeholder="9876543210"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs font-mono"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Date *</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Date *</label>
               <input
                 type="date"
                 required
                 value={walkInForm.date}
                 onChange={e => setWalkInForm({ ...walkInForm, date: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               />
             </div>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block font-semibold text-slate-300">Slot *</label>
-                <span className="text-[10px] text-purple-400 font-medium">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300">Slot *</label>
+                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-medium">
                   {TIME_SLOTS.filter(s => !walkInBookedSlots.includes(s)).length} Avail
                 </span>
               </div>
@@ -397,7 +397,7 @@ function MainApp() {
                 required
                 value={walkInForm.timeSlot}
                 onChange={e => setWalkInForm({ ...walkInForm, timeSlot: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs font-mono"
                 disabled={TIME_SLOTS.filter(s => !walkInBookedSlots.includes(s)).length === 0}
               >
                 {TIME_SLOTS.filter(s => !walkInBookedSlots.includes(s)).length === 0 ? (
@@ -406,28 +406,28 @@ function MainApp() {
                   <>
                     <option value="" disabled>-- Slot --</option>
                     {TIME_SLOTS.filter(s => !walkInBookedSlots.includes(s)).map(t => (
-                      <option key={t} value={t} className="bg-slate-900 text-white">{t}</option>
+                      <option key={t} value={t}>{t}</option>
                     ))}
                   </>
                 )}
               </select>
             </div>
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Age</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Age</label>
               <input
                 type="number"
                 value={walkInForm.age}
                 onChange={e => setWalkInForm({ ...walkInForm, age: e.target.value })}
                 placeholder="Age"
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               />
             </div>
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Gender</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Gender</label>
               <select
                 value={walkInForm.gender}
                 onChange={e => setWalkInForm({ ...walkInForm, gender: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3 py-2 rounded-xl glass-input text-xs"
               >
                 <option value="Not Specified">Not Specified</option>
                 <option value="Male">Male</option>
@@ -437,17 +437,17 @@ function MainApp() {
             </div>
           </div>
           {TIME_SLOTS.filter(s => !walkInBookedSlots.includes(s)).length === 0 && (
-            <p className="text-amber-400 text-[10px] mt-1 flex items-center gap-1">
+            <p className="text-amber-500 dark:text-amber-400 text-[10px] mt-1 flex items-center gap-1">
               <AlertCircle className="w-3 h-3 shrink-0" /> All slots for this date are already booked.
             </p>
           )}
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Treatment / Complaint *</label>
+            <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Treatment / Complaint *</label>
             <select
               value={walkInForm.service}
               onChange={e => setWalkInForm({ ...walkInForm, service: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-xs"
             >
               {servicesList.length > 0 ? (
                 servicesList.map(s => (
@@ -459,11 +459,11 @@ function MainApp() {
             </select>
           </div>
 
-          <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-800">
+          <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsQuickWalkInOpen(false)}
-              className="px-4 py-2 rounded-xl text-slate-400 hover:text-white"
+              className="px-4 py-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white cursor-pointer"
             >
               Cancel
             </button>
@@ -487,32 +487,32 @@ function MainApp() {
       >
         <form onSubmit={handleChangePasswordSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">Current Password *</label>
+            <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Current Password *</label>
             <input
               type="password"
               required
               value={oldPassword}
               onChange={e => setOldPassword(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-xs"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">New Password (Min 6 chars) *</label>
+            <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">New Password (Min 6 chars) *</label>
             <input
               type="password"
               required
               value={newPassword}
               onChange={e => setNewPassword(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl glass-input text-white text-xs"
+              className="w-full px-3 py-2 rounded-xl glass-input text-xs"
             />
           </div>
 
-          <div className="flex justify-end gap-2.5 pt-2">
+          <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsChangePasswordOpen(false)}
-              className="px-4 py-2 rounded-xl text-slate-400 hover:text-white"
+              className="px-4 py-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white cursor-pointer"
             >
               Cancel
             </button>
@@ -547,14 +547,14 @@ function MainApp() {
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm">{b.name}</span>
-                    <span className="text-purple-400 font-mono text-[11px]">{b.referenceId}</span>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">{b.name}</span>
+                    <span className="text-purple-700 dark:text-purple-400 font-mono text-[11px] font-semibold">{b.referenceId}</span>
                   </div>
-                  <div className="text-slate-400 text-[11px] mt-0.5">
+                  <div className="text-slate-600 dark:text-slate-400 text-[11px] mt-0.5">
                     {b.service} • {b.date} at {b.timeSlot} • Ph: {b.phone}
                   </div>
                   {b.message && (
-                    <div className="text-slate-400 italic text-[11px] mt-1">"{b.message}"</div>
+                    <div className="text-slate-600 dark:text-slate-400 italic text-[11px] mt-1">"{b.message}"</div>
                   )}
                 </div>
 

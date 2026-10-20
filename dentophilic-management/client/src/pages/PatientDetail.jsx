@@ -154,8 +154,8 @@ export default function PatientDetail({ patientId, onBack, onNewAppointment, onN
             </div>
 
             {allergies && (
-              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-950/60 border border-rose-600/40 text-rose-300 text-xs">
-                <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 dark:bg-rose-950/60 dark:border-rose-600/40 dark:text-rose-300 text-xs">
+                <AlertCircle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
                 <span>Allergies: <strong>{allergies}</strong></span>
               </div>
             )}
@@ -167,9 +167,9 @@ export default function PatientDetail({ patientId, onBack, onNewAppointment, onN
           <button
             type="button"
             onClick={() => setIsEditModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-semibold cursor-pointer transition-colors"
           >
-            <Edit className="w-3.5 h-3.5 text-purple-400" />
+            <Edit className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
             <span>Edit Profile</span>
           </button>
 
@@ -203,7 +203,7 @@ export default function PatientDetail({ patientId, onBack, onNewAppointment, onN
       </div>
 
       {/* Profile Tabs Bar */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-2 text-xs font-semibold">
+      <div className="flex items-center gap-2 border-b border-[var(--border-main)] pb-2 text-xs font-semibold">
         {[
           { id: 'chart', label: 'Dental Chart (FDI)', icon: Activity },
           { id: 'treatments', label: `Visits & Clinical Notes (${treatmentRecords.length})`, icon: Stethoscope },
@@ -277,14 +277,14 @@ export default function PatientDetail({ patientId, onBack, onNewAppointment, onN
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-950/40 text-slate-300 text-[11px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-purple-50/5 text-content-main text-[11px] border border-purple-500/10">
                   <div>
-                    <span className="text-slate-400 block mb-0.5">Diagnosis:</span>
-                    <span className="font-medium text-white">{tr.diagnosis}</span>
+                    <span className="text-content-subtle block mb-0.5">Diagnosis:</span>
+                    <span className="font-semibold text-content-main">{tr.diagnosis}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block mb-0.5">Procedure Carried Out:</span>
-                    <span className="font-medium text-white">{tr.procedureDone}</span>
+                    <span className="text-content-subtle block mb-0.5">Procedure Carried Out:</span>
+                    <span className="font-semibold text-content-main">{tr.procedureDone}</span>
                   </div>
                 </div>
 
@@ -427,16 +427,16 @@ export default function PatientDetail({ patientId, onBack, onNewAppointment, onN
       {/* TAB CONTENT 5: MEDICAL HISTORY & NOTES */}
       {activeTab === 'history' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-5 rounded-2xl glass-panel border border-slate-800 space-y-3 text-xs">
-            <h3 className="font-bold text-sm text-white">Systemic Medical History</h3>
-            <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">
+          <div className="p-5 rounded-2xl glass-panel space-y-3 text-xs">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white">Systemic Medical History</h3>
+            <p className="text-content-subtle whitespace-pre-wrap leading-relaxed">
               {medicalHistory || 'No systemic medical conditions recorded (e.g. Hypertension, Diabetes, Cardiac conditions).'}
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl glass-panel border border-slate-800 space-y-3 text-xs">
-            <h3 className="font-bold text-sm text-white">General Clinic Notes</h3>
-            <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">
+          <div className="p-5 rounded-2xl glass-panel space-y-3 text-xs">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white">General Clinic Notes</h3>
+            <p className="text-content-subtle whitespace-pre-wrap leading-relaxed">
               {notes || 'No general patient notes logged.'}
             </p>
           </div>
