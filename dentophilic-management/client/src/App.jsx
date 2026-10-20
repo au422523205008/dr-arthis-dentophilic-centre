@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ToastProvider, useToast } from './context/ToastContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Bot, Sparkles } from 'lucide-react';
 import { api } from './services/api';
 
 // Pages
@@ -29,6 +29,7 @@ import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
 import Modal from './components/Common/Modal';
 import Badge from './components/Common/Badge';
+import AICopilot from './components/AI/AICopilot';
 
 const TIME_SLOTS = [
   '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
@@ -53,6 +54,7 @@ function MainApp() {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isPendingBookingsModalOpen, setIsPendingBookingsModalOpen] = useState(false);
   const [pendingBookingsList, setPendingBookingsList] = useState([]);
+  const [isAICopilotOpen, setIsAICopilotOpen] = useState(false);
 
   // Change Password Form
   const [oldPassword, setOldPassword] = useState('');
@@ -249,6 +251,7 @@ function MainApp() {
               onNavigateToAppointments={() => setActiveTab('appointments')}
               onNavigateToPatients={() => setActiveTab('patients')}
               onQuickWalkIn={() => setIsQuickWalkInOpen(true)}
+              onOpenAICopilot={() => setIsAICopilotOpen(true)}
             />
           )}
 
@@ -570,6 +573,43 @@ function MainApp() {
           )}
         </div>
       </Modal>
+
+      {/* FLOATING AI COPILOT LAUNCHER BUTTON */}
+      <motion.button
+        type="button"
+        onClick={() => setIsAICopilotOpen(true)}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-40 p-3.5 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-500 hover:to-indigo-500 text-white shadow-2xl shadow-purple-600/50 flex items-center gap-2.5 border border-purple-400/40 cursor-pointer group transition-all"
+        title="Open Dentophilic AI Clinical Copilot"
+      >
+        <div className="relative">
+          <Bot className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-purple-800 animate-pulse" />
+        </div>
+        <span className="hidden sm:inline font-bold text-xs tracking-wide">
+          AI Copilot
+        </span>
+        <Sparkles className="w-3.5 h-3.5 text-amber-300 hidden sm:inline" />
+      </motion.button>
+
+      {/* AI CLINICAL COPILOT MODAL / DRAWER */}
+      <AICopilot
+        isOpen={isAICopilotOpen}
+        onClose={() => setIsAICopilotOpen(false)}
+        onNavigateToPatients={() => setActiveTab('patients')}
+        onNavigateToAppointments={() => setActiveTab('appointments')}
+        onOpenScheduleModal={(patient) => {
+          setWalkInForm(prev => ({
+            ...prev,
+            name: patient.name,
+            phone: patient.phone,
+            age: patient.age || '',
+            gender: patient.gender || 'Not Specified'
+          }));
+          setIsQuickWalkInOpen(true);
+        }}
+      />
     </div>
   );
 }

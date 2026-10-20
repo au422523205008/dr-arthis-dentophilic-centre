@@ -15,6 +15,7 @@ import {
   Phone,
   MessageSquare,
   Sparkles,
+  Bot,
   Sun,
   Moon,
   Sunrise,
@@ -27,13 +28,14 @@ import { useToast } from '../context/ToastContext';
 import Badge from '../components/Common/Badge';
 import EmptyState from '../components/Common/EmptyState';
 
-export default function Dashboard({ onNavigateToAppointments, onNavigateToPatients, onQuickWalkIn }) {
+export default function Dashboard({ onNavigateToAppointments, onNavigateToPatients, onQuickWalkIn, onOpenAICopilot }) {
   const { user, isAdmin } = useAuth();
   const { success, error } = useToast();
 
   const [metrics, setMetrics] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isConfirmingId, setIsConfirmingId] = useState(null);
+  const [aiPromptInput, setAiPromptInput] = useState('');
 
   const fetchMetrics = async () => {
     try {
@@ -181,6 +183,87 @@ export default function Dashboard({ onNavigateToAppointments, onNavigateToPatien
           </button>
         </div>
       </div>
+
+      {/* AI CLINICAL COPILOT HERO BANNER */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="p-5 rounded-2xl bg-gradient-to-r from-purple-900/30 via-indigo-900/20 to-slate-900/40 border border-purple-500/30 shadow-lg shadow-purple-950/20 relative overflow-hidden"
+      >
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="relative">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/40">
+                <Bot className="w-6 h-6 animate-pulse" />
+              </div>
+              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950" />
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <span>Dentophilic AI Clinical Copilot</span>
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                </h2>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-700 dark:text-purple-300 font-mono font-semibold">
+                  Online
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                Register patients via multi-turn chat, check waiting queues, drug dosages, or inventory alerts.
+              </p>
+            </div>
+          </div>
+
+          {/* Quick Prompt Bar */}
+          <div className="w-full md:w-auto flex-1 max-w-md">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (onOpenAICopilot) onOpenAICopilot(aiPromptInput || 'Add patient');
+                setAiPromptInput('');
+              }}
+              className="flex items-center gap-2 bg-white/70 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-purple-500/30 focus-within:border-purple-500 transition-all"
+            >
+              <input
+                type="text"
+                value={aiPromptInput}
+                onChange={e => setAiPromptInput(e.target.value)}
+                placeholder="Ask Copilot: 'Add patient', 'Queue today'..."
+                className="flex-1 px-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 bg-transparent focus:outline-hidden"
+              />
+              <button
+                type="submit"
+                className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs shadow-md shadow-purple-600/30 cursor-pointer flex items-center gap-1 transition-all"
+              >
+                <span>Chat</span>
+                <Sparkles className="w-3.5 h-3.5" />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Quick Action Suggestion Chips */}
+        <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-purple-500/15 text-xs">
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Quick Prompts:</span>
+          {[
+            { label: '🩺 Add new patient', prompt: 'Add patient' },
+            { label: "📅 Today's Queue & Schedule", prompt: "Show today's queue and schedule" },
+            { label: '💊 Pulpitis Prescription Guide', prompt: 'Prescription for acute pulpitis' },
+            { label: '📦 Low Stock Alert', prompt: 'Check low stock inventory' },
+            { label: "💰 Today's Revenue", prompt: "Today's revenue summary" }
+          ].map((chip, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => onOpenAICopilot && onOpenAICopilot(chip.prompt)}
+              className="px-2.5 py-1 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-semibold text-[11px] transition-colors border border-purple-500/20 cursor-pointer"
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+      </motion.div>
 
       {/* ADMIN FINANCIAL METRICS (Strictly omitted for Attenders) */}
       {isAdmin && financials && (

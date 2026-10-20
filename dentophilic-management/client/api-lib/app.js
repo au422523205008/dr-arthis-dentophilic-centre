@@ -58,6 +58,7 @@ app.use('/api/audit-logs', require('./routes/auditLogs'));
 app.use('/api/backups', require('./routes/backups'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/dental-chart', require('./routes/dentalChart'));
+app.use('/api/ai', require('./routes/ai'));
 
 // Catch-all 404 for unhandled API routes
 app.use('/api', (req, res) => {

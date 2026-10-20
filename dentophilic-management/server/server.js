@@ -74,6 +74,7 @@ app.use('/api/audit-logs', require('./routes/auditLogs'));
 app.use('/api/recycle-bin', require('./routes/recycleBin'));
 app.use('/api/backups', require('./routes/backups'));
 app.use('/api/settings', require('./routes/settings'));
+app.use('/api/ai', require('./routes/ai'));
 
 // 404 Handler
 app.use((req, res) => {
