@@ -25,3 +25,8 @@ dist-ssr
 
 .vercel
 .env*
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+blob_downloaded.db

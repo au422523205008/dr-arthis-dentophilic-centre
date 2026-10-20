@@ -1,14 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const { runMigrations } = require('./db/migrate');
-
-// Run migrations on start
-try {
-  runMigrations();
-} catch (e) {
-  console.warn('[Migrations warning]:', e.message);
-}
+const { ensureCloudDbReady, getActiveDbInstance, getResolvedDbPath } = require('./db');
+const { syncCloudDbImmediate } = require('./db/cloudSync');
 
 const app = express();
 
@@ -23,14 +17,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const { ensureCloudDbReady } = require('./db');
-// Ensure persistent cloud database is loaded from Vercel Blob before serving requests
+// Robust Cloud Persistence Middleware
+// 1. Ensures remote database is downloaded from Vercel Blob before request execution
+// 2. Intercepts successful writes (POST, PUT, PATCH, DELETE) and awaits Vercel Blob upload before response completes
 app.use(async (req, res, next) => {
   try {
     await ensureCloudDbReady();
   } catch (err) {
     console.error('[Cloud DB Middleware Warning]:', err.message);
   }
+
+  const isMutating = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
+  if (isMutating) {
+    const originalJson = res.json.bind(res);
+    res.json = async function(body) {
+      try {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          const activeDb = getActiveDbInstance();
+          const dbPath = getResolvedDbPath();
+          await syncCloudDbImmediate(dbPath, activeDb);
+        }
+      } catch (syncErr) {
+        console.error('[Cloud Auto-Sync Error on Write]:', syncErr.message);
+      }
+      return originalJson(body);
+    };
+  }
+
   next();
 });
 
@@ -64,6 +77,5 @@ app.use('/api/ai', require('./routes/ai'));
 app.use('/api', (req, res) => {
   res.status(404).json({ success: false, message: `Route not found: ${req.method} ${req.originalUrl}` });
 });
-
 
 module.exports = app;

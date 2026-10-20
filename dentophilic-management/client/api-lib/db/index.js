@@ -1,7 +1,7 @@
 const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
 const fs = require('fs');
-const { initCloudDatabase, pushToCloud, scheduleCloudSync } = require('./cloudSync');
+const { initCloudDatabase, syncCloudDbImmediate } = require('./cloudSync');
 
 const isVercel = !!process.env.VERCEL;
 const tmpDb = '/tmp/appointments.db';
@@ -10,11 +10,6 @@ const bundledDb = path.resolve(__dirname, 'appointments.db');
 let resolvedDbPath;
 if (isVercel) {
   resolvedDbPath = tmpDb;
-  if (!fs.existsSync(tmpDb)) {
-    if (fs.existsSync(bundledDb)) {
-      fs.copyFileSync(bundledDb, tmpDb);
-    }
-  }
 } else {
   const localDb = path.resolve(__dirname, '../../../../dentophilic-website/server/appointments.db');
   resolvedDbPath = fs.existsSync(localDb) ? localDb : bundledDb;
@@ -28,79 +23,84 @@ function createConnection(dbFilePath) {
   return connection;
 }
 
-let activeDb = createConnection(resolvedDbPath);
+let activeDb = null;
+let isInitialized = false;
+let initCloudPromise = null;
 
-function refreshDb() {
-  try {
-    if (activeDb && typeof activeDb.close === 'function') {
-      try { activeDb.close(); } catch (_) {}
+function getActiveDbInstance() {
+  if (!activeDb) {
+    if (!fs.existsSync(resolvedDbPath) && fs.existsSync(bundledDb)) {
+      try {
+        fs.copyFileSync(bundledDb, resolvedDbPath);
+      } catch (_) {}
     }
     activeDb = createConnection(resolvedDbPath);
-    console.log('[DB] Connection re-established on ' + resolvedDbPath);
-  } catch (e) {
-    console.error('[DB] Error refreshing connection:', e.message);
   }
+  return activeDb;
 }
 
-let initCloudPromise = null;
+function getResolvedDbPath() {
+  return resolvedDbPath;
+}
+
+/**
+ * Ensures remote database is downloaded from Vercel Blob BEFORE any connections are created.
+ */
 async function ensureCloudDbReady() {
+  if (isInitialized && activeDb) return;
   if (initCloudPromise) return initCloudPromise;
+
   initCloudPromise = (async () => {
-    const res = await initCloudDatabase(resolvedDbPath, bundledDb);
-    if (res && res.success && res.mode === 'cloud_restored') {
-      refreshDb();
+    try {
+      console.log(`[DB] Initializing database (isVercel: ${isVercel})...`);
+      const res = await initCloudDatabase(resolvedDbPath, bundledDb);
+
+      if (activeDb && typeof activeDb.close === 'function') {
+        try { activeDb.close(); } catch (_) {}
+      }
+      activeDb = createConnection(resolvedDbPath);
+      console.log(`[DB] Connected to database at ${resolvedDbPath}`);
+
+      // Run any pending schema migrations safely
+      try {
+        const { runMigrations } = require('./migrate');
+        runMigrations(activeDb);
+      } catch (migErr) {
+        console.warn('[DB] Migration note:', migErr.message);
+      }
+
+      isInitialized = true;
+    } catch (err) {
+      console.error('[DB] ensureCloudDbReady failed:', err.message);
+      if (!activeDb) {
+        activeDb = createConnection(resolvedDbPath);
+      }
+    } finally {
+      initCloudPromise = null;
     }
   })();
+
   return initCloudPromise;
 }
 
-const WRITE_REGEX = /^\s*(INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|ALTER)/i;
-
+// Ensure database proxy dynamically delegates to activeDb
 const db = new Proxy({}, {
   get(target, prop) {
-    if (prop === 'prepare') {
-      return function(sql) {
-        const stmt = activeDb.prepare(sql);
-        const isWrite = WRITE_REGEX.test(sql);
-        if (!isWrite) return stmt;
-        return new Proxy(stmt, {
-          get(sTarget, sProp) {
-            if (sProp === 'run') {
-              return function(...args) {
-                const res = sTarget.run(...args);
-                scheduleCloudSync(resolvedDbPath, () => activeDb);
-                return res;
-              };
-            }
-            const val = sTarget[sProp];
-            return typeof val === 'function' ? val.bind(sTarget) : val;
-          }
-        });
-      };
-    }
-    if (prop === 'exec') {
-      return function(sql) {
-        const res = activeDb.exec(sql);
-        if (WRITE_REGEX.test(sql)) {
-          scheduleCloudSync(resolvedDbPath, () => activeDb);
-        }
-        return res;
-      };
-    }
-    const val = activeDb[prop];
-    return typeof val === 'function' ? val.bind(activeDb) : val;
+    const currentDb = getActiveDbInstance();
+    const val = currentDb[prop];
+    return typeof val === 'function' ? val.bind(currentDb) : val;
   }
 });
 
 function runTransaction(fn) {
-  db.exec('BEGIN IMMEDIATE;');
+  const currentDb = getActiveDbInstance();
+  currentDb.exec('BEGIN IMMEDIATE;');
   try {
-    const result = fn(db);
-    db.exec('COMMIT;');
-    scheduleCloudSync(resolvedDbPath, () => activeDb);
+    const result = fn(currentDb);
+    currentDb.exec('COMMIT;');
     return result;
   } catch (err) {
-    db.exec('ROLLBACK;');
+    currentDb.exec('ROLLBACK;');
     throw err;
   }
 }
@@ -108,7 +108,7 @@ function runTransaction(fn) {
 module.exports = {
   db,
   runTransaction,
-  dbPath: resolvedDbPath,
   ensureCloudDbReady,
-  refreshDb
+  getActiveDbInstance,
+  getResolvedDbPath
 };
