@@ -184,15 +184,18 @@ async function handleAIChat(req, res) {
       lower.startsWith('show patient') ||
       lower.includes('patient history') ||
       lower.includes('history kaatu') ||
+      lower.includes('details kaatu') ||
       lower.includes('patient details') ||
       lower.includes('details sollu') ||
       lower.includes('patient dhoondo') ||
-      trimmedMsg.includes('நோயாளி தேடு');
+      (lower.includes('details') && (lower.includes('kaatu') || lower.includes('sollu') || lower.includes('da') || lower.includes('oda') || lower.includes('kodu') || lower.includes('eda'))) ||
+      trimmedMsg.includes('நோயாளி தேடு') ||
+      trimmedMsg.includes('விவரம்');
 
     if (isPatientSearch) {
       // Extract query term
       let searchTerm = lower
-        .replace(/find patient|search patient|show patient|patient history|history kaatu|patient details|details sollu|patient dhoondo|patient|details|history|kaatu|sollu|dhoondo|thedu|oda|நோயாளி|தேடு/gi, '')
+        .replace(/find patient|search patient|show patient|patient history|history kaatu|details kaatu|patient details|details sollu|patient dhoondo|patient|details|history|kaatu|sollu|dhoondo|thedu|oda|da|kodu|eda|நோயாளி|தேடு|விவரம்/gi, '')
         .trim();
 
       if (!searchTerm && trimmedMsg.split(' ').length > 1) {
