@@ -11,6 +11,7 @@ import {
   Phone,
   CheckCircle2,
   AlertTriangle,
+  AlertCircle,
   FileText,
   DollarSign,
   Maximize2,
@@ -21,7 +22,11 @@ import {
   ShieldCheck,
   HeartPulse,
   Pill,
-  ChevronRight
+  ChevronRight,
+  Package,
+  Receipt,
+  TrendingUp,
+  Languages
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { api } from '../../services/api';
@@ -42,12 +47,12 @@ export default function AICopilot({
     {
       id: 1,
       sender: 'ai',
-      text: `Hello Doctor ${user?.name ? user.name.split(' ')[0] : ''}! 🩺\n\nI am your **Dentophilic Clinical Copilot**. I can register patients conversationally, inspect today's appointments, check low stock materials, or provide dental pharmacological protocols.`,
+      text: `Hello Doctor ${user?.name ? user.name.split(' ')[0] : ''}! 🩺\n\nI am your **Dentophilic Clinical Copilot (Multi-Lingual AI Agent)**. You can talk to me in **English, Tamil (தமிழ்), Tanglish ("Inniku evlo patient da"), or Hindi**!\n\nI can register patients, search medical records, check today's queue, lookup low stock materials, record clinic expenses, or recommend dental drug dosages.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       suggestions: [
         'Add new patient',
-        "Today's queue & schedule",
-        'Check low stock inventory',
+        'Inniku evlo patient vandhanga?',
+        'Check Lidocaine stock',
         'Prescription for acute pulpitis',
         "Today's revenue summary"
       ]
@@ -62,6 +67,7 @@ export default function AICopilot({
   const [patientFormState, setPatientFormState] = useState({
     active: false,
     step: null, // 'NAME' | 'PHONE' | 'AGE_GENDER' | 'COMPLAINT' | 'ALLERGIES' | 'CONFIRM'
+    language: 'english', // 'english' | 'tanglish' | 'tamil' | 'hindi'
     data: {
       name: '',
       phone: '',
@@ -139,8 +145,6 @@ export default function AICopilot({
     setInput('');
     setIsTyping(true);
 
-    const lower = textToSend.toLowerCase().trim();
-
     // 1. CHECK IF IN MULTI-TURN ADD PATIENT FLOW
     if (patientFormState.active) {
       await handlePatientFormProgress(textToSend);
@@ -155,6 +159,7 @@ export default function AICopilot({
         setPatientFormState({
           active: true,
           step: 'CONFIRM',
+          language: 'english',
           data: oneShotData
         });
         setMessages(prev => [
@@ -167,47 +172,11 @@ export default function AICopilot({
             patientPreview: oneShotData
           }
         ]);
-      }, 600);
-      return;
-    }
-
-    // 3. START STEP-BY-STEP PATIENT REGISTRATION
-    if (
-      lower.includes('add patient') ||
-      lower.includes('new patient') ||
-      lower.includes('register patient') ||
-      lower.includes('create patient')
-    ) {
-      setTimeout(() => {
-        setIsTyping(false);
-        setPatientFormState({
-          active: true,
-          step: 'NAME',
-          data: {
-            name: '',
-            phone: '',
-            age: '',
-            gender: 'Not Specified',
-            complaint: '',
-            allergies: 'None',
-            medicalHistory: ''
-          }
-        });
-        setMessages(prev => [
-          ...prev,
-          {
-            id: Date.now() + 1,
-            sender: 'ai',
-            text: "Let's register the new patient step-by-step! 🩺\n\nWhat is the **patient's full name**?",
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            stepIndicator: { current: 1, total: 5, label: 'Patient Full Name' }
-          }
-        ]);
       }, 500);
       return;
     }
 
-    // 4. CALL BACKEND AI CHAT API
+    // 3. CALL BACKEND MULTI-LINGUAL AI CHAT API
     try {
       const res = await api.post('/ai/chat', {
         message: textToSend,
@@ -220,6 +189,24 @@ export default function AICopilot({
       setIsTyping(false);
 
       if (res.success) {
+        // If the AI detected patient registration intent, automatically initiate guided multi-turn flow
+        if (res.intent === 'ADD_PATIENT_START') {
+          setPatientFormState({
+            active: true,
+            step: 'NAME',
+            language: res.language || 'english',
+            data: {
+              name: '',
+              phone: '',
+              age: '',
+              gender: 'Not Specified',
+              complaint: '',
+              allergies: 'None',
+              medicalHistory: ''
+            }
+          });
+        }
+
         setMessages(prev => [
           ...prev,
           {
@@ -229,6 +216,13 @@ export default function AICopilot({
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             intent: res.intent,
             data: res.data,
+            stepIndicator: res.intent === 'ADD_PATIENT_START'
+              ? {
+                  current: 1,
+                  total: 5,
+                  label: res.language === 'tamil' ? 'நோயாளியின் பெயர்' : res.language === 'tanglish' ? 'Patient Name' : 'Patient Full Name'
+                }
+              : null,
             suggestions: res.quickSuggestions || (res.intent === 'DENTAL_PROTOCOL' ? [
               'Add new patient',
               "Check today's queue",
@@ -255,10 +249,11 @@ export default function AICopilot({
     }
   };
 
-  // Multi-Turn Step Progression
+  // Multi-Turn Step Progression with Multi-Lingual Responses
   const handlePatientFormProgress = async (text) => {
     const currentStep = patientFormState.step;
     const currentData = { ...patientFormState.data };
+    const lang = patientFormState.language || 'english';
     const trimmed = text.trim();
 
     setTimeout(async () => {
@@ -266,101 +261,172 @@ export default function AICopilot({
 
       if (currentStep === 'NAME') {
         currentData.name = trimmed;
-        setPatientFormState({ active: true, step: 'PHONE', data: currentData });
+        setPatientFormState(prev => ({ ...prev, active: true, step: 'PHONE', data: currentData }));
+        
+        let replyText = `Got it! **${trimmed}**.\n\nNow, what is their **10-digit mobile phone number**?`;
+        let stepLabel = 'Phone Number';
+        if (lang === 'tanglish') {
+          replyText = `Sari doctor! **${trimmed}** note panniyachu. 👍\n\nAvanga **10-digit mobile phone number** sollunga?`;
+          stepLabel = 'Mobile Number';
+        } else if (lang === 'tamil') {
+          replyText = `சரி மருத்துவரே! **${trimmed}** குறிக்கப்பட்டது. 👍\n\nநோயாளியின் **10 இலக்க மொபைல் எண்** என்ன?`;
+          stepLabel = 'மொபைல் எண்';
+        } else if (lang === 'hindi') {
+          replyText = `नोट कर लिया गया है: **${trimmed}**। 👍\n\nअब मरीज का **10 अंकों का मोबाइल नंबर** बताएं?`;
+          stepLabel = 'फ़ोन नंबर';
+        }
+
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 1,
             sender: 'ai',
-            text: `Got it! **${trimmed}**.\n\nNow, what is their **10-digit mobile phone number**?`,
+            text: replyText,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            stepIndicator: { current: 2, total: 5, label: 'Phone Number' }
+            stepIndicator: { current: 2, total: 5, label: stepLabel }
           }
         ]);
       } else if (currentStep === 'PHONE') {
         const cleanPhone = trimmed.replace(/\D/g, '');
         currentData.phone = cleanPhone.length >= 10 ? cleanPhone.slice(-10) : trimmed;
-        setPatientFormState({ active: true, step: 'AGE_GENDER', data: currentData });
+        setPatientFormState(prev => ({ ...prev, active: true, step: 'AGE_GENDER', data: currentData }));
+
+        let replyText = `Phone noted (**${currentData.phone}**).\n\nWhat is the patient's **age and gender**?`;
+        let stepLabel = 'Age & Gender';
+        let defaultChips = ['25 Male', '28 Female', '35 Male', '42 Female', 'Child (8 Female)', 'Skip Age/Gender'];
+
+        if (lang === 'tanglish') {
+          replyText = `Phone number noted (**${currentData.phone}**). 📱\n\nPatient-oda **Age & Gender** enna doctor?`;
+          stepLabel = 'Age & Gender';
+        } else if (lang === 'tamil') {
+          replyText = `மொபைல் எண் பதியப்பட்டது (**${currentData.phone}**). 📱\n\nநோயாளியின் **வயது மற்றும் பாலினம்** என்ன?`;
+          stepLabel = 'வயது மற்றும் பாலினம்';
+          defaultChips = ['25 ஆண்', '28 பெண்', '35 ஆண்', '42 பெண்', 'தவிர்க்க'];
+        } else if (lang === 'hindi') {
+          replyText = `फ़ोन नंबर दर्ज: **${currentData.phone}**। 📱\n\nमरीज की **उम्र और लिंग** क्या है?`;
+          stepLabel = 'उम्र और लिंग';
+          defaultChips = ['25 Male', '28 Female', '35 Male', '42 Female', 'छोड़ें'];
+        }
+
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 1,
             sender: 'ai',
-            text: `Phone noted (**${currentData.phone}**).\n\nWhat is the patient's **age and gender**?`,
+            text: replyText,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            stepIndicator: { current: 3, total: 5, label: 'Age & Gender' },
-            chips: [
-              '25 Male',
-              '28 Female',
-              '35 Male',
-              '42 Female',
-              'Child (8 Female)',
-              'Skip Age/Gender'
-            ]
+            stepIndicator: { current: 3, total: 5, label: stepLabel },
+            chips: defaultChips
           }
         ]);
       } else if (currentStep === 'AGE_GENDER') {
-        if (!trimmed.toLowerCase().includes('skip')) {
+        if (!trimmed.toLowerCase().includes('skip') && !trimmed.includes('தவிர்க்க') && !trimmed.includes('छोड़ें')) {
           const ageMatch = trimmed.match(/\d+/);
           if (ageMatch) currentData.age = ageMatch[0];
-          if (/female|f\b/i.test(trimmed)) currentData.gender = 'Female';
-          else if (/male|m\b/i.test(trimmed)) currentData.gender = 'Male';
+          if (/female|f\b|பெண்/i.test(trimmed)) currentData.gender = 'Female';
+          else if (/male|m\b|ஆண்/i.test(trimmed)) currentData.gender = 'Male';
         }
-        setPatientFormState({ active: true, step: 'COMPLAINT', data: currentData });
+        setPatientFormState(prev => ({ ...prev, active: true, step: 'COMPLAINT', data: currentData }));
+
+        let replyText = `Thank you. What is their **chief complaint or reason for visit**?`;
+        let stepLabel = 'Chief Complaint';
+        let complaintChips = [
+          'Severe Toothache',
+          'Routine Cleaning & Scaling',
+          'Cavity / Broken Tooth',
+          'Crown / Bridge Consultation',
+          'Braces / Clear Aligners',
+          'General Checkup'
+        ];
+
+        if (lang === 'tanglish') {
+          replyText = `Noted doctor! Patient-ku enna **chief complaint / reason for visit** (toothache, cleaning, cavity)?`;
+          stepLabel = 'Chief Complaint';
+        } else if (lang === 'tamil') {
+          replyText = `குறிக்கப்பட்டது மருத்துவரே! நோயாளியின் **முக்கிய பிரச்சனை / வருகைக்கான காரணம்** என்ன?`;
+          stepLabel = 'முக்கிய பிரச்சனை';
+          complaintChips = ['கடும் பல் வலி', 'பல் சுத்தம் செய்தல்', 'பல் சொத்தை / உடைவு', 'ரூட் கெனால்', 'கிளினிக் பரிசோதனை'];
+        } else if (lang === 'hindi') {
+          replyText = `नोट कर लिया गया है। मरीज की **मुख्य समस्या / तकलीफ** क्या है?`;
+          stepLabel = 'मुख्य समस्या';
+          complaintChips = ['तेज दांत दर्द', 'दांतों की सफाई', 'दांत में कीड़ा / कैविटी', 'रूट कैनाल', 'सामान्य जांच'];
+        }
+
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 1,
             sender: 'ai',
-            text: `Thank you. What is their **chief complaint or reason for visit**?`,
+            text: replyText,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            stepIndicator: { current: 4, total: 5, label: 'Chief Complaint' },
-            chips: [
-              'Severe Toothache',
-              'Routine Cleaning & Scaling',
-              'Cavity / Broken Tooth',
-              'Crown / Bridge Consultation',
-              'Braces / Clear Aligners',
-              'General Checkup'
-            ]
+            stepIndicator: { current: 4, total: 5, label: stepLabel },
+            chips: complaintChips
           }
         ]);
       } else if (currentStep === 'COMPLAINT') {
         currentData.complaint = trimmed;
-        setPatientFormState({ active: true, step: 'ALLERGIES', data: currentData });
+        setPatientFormState(prev => ({ ...prev, active: true, step: 'ALLERGIES', data: currentData }));
+
+        let replyText = `Complaint noted: *"${trimmed}"*.\n\nAny known **drug allergies** (e.g., Penicillin, NSAIDs) or systemic conditions (Diabetes, Hypertension)?`;
+        let stepLabel = 'Allergies & Medical History';
+        let allergyChips = [
+          'No Allergies / Healthy',
+          'Allergic to Penicillin',
+          'Diabetic (Type 2)',
+          'Hypertensive',
+          'Asthmatic'
+        ];
+
+        if (lang === 'tanglish') {
+          replyText = `Complaint: *"${trimmed}"*. 👍\n\nEdhavadhu **drug allergies** (Penicillin, etc.) or systemic conditions (Diabetes / BP) irukka?`;
+          stepLabel = 'Allergies & History';
+        } else if (lang === 'tamil') {
+          replyText = `பிரச்சனை: *"${trimmed}"*. 👍\n\nஏதேனும் **மருந்து ஒவ்வாமை (Penicillin, NSAIDs)** அல்லது இரத்த அழுத்தம்/நீரிழிவு நோய் உள்ளதா?`;
+          stepLabel = 'ஒவ்வாமை & வரலாறு';
+          allergyChips = ['ஒவ்வாமை எதுவும் இல்லை', 'பென்சிலின் ஒவ்வாமை', 'நீரிழிவு நோய்', 'இரத்த அழுத்தம்', 'ஆஸ்துமா'];
+        } else if (lang === 'hindi') {
+          replyText = `समस्या नोट: *"${trimmed}"*. 👍\n\nक्या कोई **दवा एलर्जी (Penicillin)** या बीपी/डायबिटीज की समस्या है?`;
+          stepLabel = 'एलर्जी और इतिहास';
+          allergyChips = ['कोई एलर्जी नहीं / स्वस्थ', 'पेनिसिलिन एलर्जी', 'मधुमेह (टाइप 2)', 'उच्च रक्तचाप', 'अस्थमा'];
+        }
+
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 1,
             sender: 'ai',
-            text: `Complaint noted: *"${trimmed}"*.\n\nAny known **drug allergies** (e.g., Penicillin, NSAIDs) or systemic conditions (Diabetes, Hypertension)?`,
+            text: replyText,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            stepIndicator: { current: 5, total: 5, label: 'Allergies & Medical History' },
-            chips: [
-              'No Allergies / Healthy',
-              'Allergic to Penicillin',
-              'Diabetic (Type 2)',
-              'Hypertensive',
-              'Asthmatic'
-            ]
+            stepIndicator: { current: 5, total: 5, label: stepLabel },
+            chips: allergyChips
           }
         ]);
       } else if (currentStep === 'ALLERGIES') {
         currentData.allergies = trimmed;
-        currentData.medicalHistory = trimmed.includes('Diabetic') || trimmed.includes('Hypertensive') ? trimmed : '';
-        setPatientFormState({ active: true, step: 'CONFIRM', data: currentData });
+        currentData.medicalHistory = trimmed.includes('Diabetic') || trimmed.includes('Hypertensive') || trimmed.includes('நீரிழிவு') ? trimmed : '';
+        setPatientFormState(prev => ({ ...prev, active: true, step: 'CONFIRM', data: currentData }));
+
+        let confirmText = `All clinical details gathered! 📋\n\nPlease review the patient profile below and click **Register Patient** to record them in the clinic database:`;
+        if (lang === 'tanglish') {
+          confirmText = `Ellam clinical details-um gather panniyachu doctor! 📋\n\nKeezha irukra patient profile review pannittu **Register Patient** click pannunga, database-la create aagidum:`;
+        } else if (lang === 'tamil') {
+          confirmText = `அனைத்து மருத்துவ விவரங்களும் பெறப்பட்டன! 📋\n\nகீழுள்ள நோயாளி விவரங்களை சரிபார்த்து **Register Patient** பொத்தானை அழுத்தி மருத்துவ பதிவேட்டில் சேர்க்கவும்:`;
+        } else if (lang === 'hindi') {
+          confirmText = `सभी क्लिनिकल विवरण एकत्रित कर लिए गए हैं! 📋\n\nकृपया नीचे दिए गए प्रोफाइल की समीक्षा करें और **Register Patient** पर क्लिक करें:`;
+        }
+
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 1,
             sender: 'ai',
-            text: `All clinical details gathered! 📋\n\nPlease review the patient profile below and click **Register Patient** to record them in the clinic database:`,
+            text: confirmText,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             patientPreview: currentData
           }
         ]);
       }
-    }, 450);
+    }, 400);
   };
 
   // Submit and commit patient to database
@@ -388,14 +454,24 @@ export default function AICopilot({
         });
         success(`Patient ${res.patient.name} registered successfully!`);
 
-        setPatientFormState({ active: false, step: null, data: {} });
+        const lang = patientFormState.language;
+        let successMsg = `🎉 **Success!** Patient record has been permanently created with clinical ID **${res.patient.patientId}**.`;
+        if (lang === 'tanglish') {
+          successMsg = `🎉 **Super Doctor!** Patient **${res.patient.name}** record database-la create aayidichu with Clinical ID **${res.patient.patientId}**.`;
+        } else if (lang === 'tamil') {
+          successMsg = `🎉 **வெற்றி!** நோயாளி **${res.patient.name}** விவரம் மருத்துவ தரவுத்தளத்தில் ஐடி **${res.patient.patientId}** உடன் நிரந்தரமாக சேமிக்கப்பட்டது.`;
+        } else if (lang === 'hindi') {
+          successMsg = `🎉 **सफलता!** मरीज **${res.patient.name}** का रिकॉर्ड आईडी **${res.patient.patientId}** के साथ डेटाबेस में दर्ज हो गया है।`;
+        }
+
+        setPatientFormState({ active: false, step: null, language: 'english', data: {} });
 
         setMessages(prev => [
           ...prev,
           {
             id: Date.now(),
             sender: 'ai',
-            text: `🎉 **Success!** Patient record has been permanently created with clinical ID **${res.patient.patientId}**.`,
+            text: successMsg,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             patientCreated: res.patient
           }
@@ -419,13 +495,18 @@ export default function AICopilot({
   };
 
   const handleCancelPatientForm = () => {
-    setPatientFormState({ active: false, step: null, data: {} });
+    const lang = patientFormState.language;
+    setPatientFormState({ active: false, step: null, language: 'english', data: {} });
+    let cancelMsg = 'Patient registration cancelled. Let me know whenever you need anything else, Doctor!';
+    if (lang === 'tanglish') cancelMsg = 'Patient registration cancel panniyachu doctor. Vera edhavadhu help venuma?';
+    else if (lang === 'tamil') cancelMsg = 'நோயாளி பதிவு ரத்து செய்யப்பட்டது மருத்துவரே. வேறு ஏதேனும் உதவி வேண்டுமா?';
+
     setMessages(prev => [
       ...prev,
       {
         id: Date.now(),
         sender: 'ai',
-        text: 'Patient registration cancelled. Let me know whenever you need anything else, Doctor!',
+        text: cancelMsg,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         suggestions: ['Add new patient', "Today's queue & schedule", 'Check low stock inventory']
       }
@@ -473,13 +554,14 @@ export default function AICopilot({
                     <span>Dentophilic Copilot</span>
                     <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                   </h3>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-purple-500/20 text-purple-700 dark:text-purple-300 font-mono font-semibold">
-                    AI Agent
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-purple-500/20 text-purple-700 dark:text-purple-300 font-mono font-semibold">
+                    Mass LLM
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400">
-                  Clinical assistant • Dr. Arthi's Dental Practice
-                </p>
+                <div className="flex items-center gap-1.5 text-[10px] text-purple-600 dark:text-purple-300">
+                  <Languages className="w-3 h-3 text-purple-400" />
+                  <span>English • தமிழ் • Tanglish • हिंदी</span>
+                </div>
               </div>
             </div>
 
@@ -665,6 +747,231 @@ export default function AICopilot({
                           <span>Open File</span>
                         </button>
                       </div>
+                    </div>
+                  )}
+
+                  {/* 1. PATIENT SEARCH RESULT CARD */}
+                  {msg.intent === 'PATIENT_SEARCH_RESULT' && msg.data?.patient && (
+                    <div className="mt-3 p-3.5 rounded-2xl bg-purple-500/10 dark:bg-purple-950/30 border border-purple-500/30 space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-xl bg-purple-600/25 border border-purple-500/40 flex items-center justify-center font-bold text-purple-700 dark:text-purple-300 text-sm shadow-xs">
+                            {msg.data.patient.name?.charAt(0).toUpperCase() || 'P'}
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 dark:text-white text-sm">
+                              {msg.data.patient.name}
+                            </div>
+                            <div className="text-[11px] font-mono text-purple-700 dark:text-purple-300 font-semibold">
+                              ID: {msg.data.patient.patientId} • Ph: {msg.data.patient.phone || 'N/A'}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-semibold border border-emerald-500/30">
+                          Active Patient
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-700 dark:text-slate-300 bg-white/40 dark:bg-slate-900/50 p-2.5 rounded-xl border border-purple-500/15">
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Demographics:</span>
+                          <span className="font-medium">{msg.data.patient.age ? `${msg.data.patient.age} yrs` : 'Age N/A'} • {msg.data.patient.gender}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Total Past Visits:</span>
+                          <span className="font-bold text-purple-700 dark:text-purple-300">{msg.data.patient.visitsCount || 0} visits</span>
+                        </div>
+                        {msg.data.patient.lastVisit && (
+                          <div className="col-span-2">
+                            <span className="text-slate-400 block text-[10px]">Last Consultation Date:</span>
+                            <span className="font-medium">{msg.data.patient.lastVisit}</span>
+                          </div>
+                        )}
+                        <div className="col-span-2">
+                          <span className="text-slate-400 block text-[10px]">Allergies & Medical Alerts:</span>
+                          <span className={msg.data.patient.allergies && msg.data.patient.allergies !== 'None' ? 'text-rose-600 dark:text-rose-400 font-semibold' : 'text-slate-600 dark:text-slate-400'}>
+                            {msg.data.patient.allergies || 'No known drug allergies'} {msg.data.patient.medicalHistory ? `• ${msg.data.patient.medicalHistory}` : ''}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 pt-1 text-[11px]">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onClose();
+                            if (onOpenScheduleModal) onOpenScheduleModal(msg.data.patient);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold cursor-pointer shadow-sm shadow-purple-600/30 transition-all"
+                        >
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span>Schedule Visit</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onClose();
+                            if (onNavigateToPatients) onNavigateToPatients(msg.data.patient.id);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-purple-500/10 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 font-semibold cursor-pointer transition-colors"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          <span>Open File</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 2. INVENTORY SINGLE ITEM CARD */}
+                  {msg.intent === 'INVENTORY_ITEM' && msg.data?.item && (
+                    <div className={`mt-3 p-3.5 rounded-2xl border space-y-2.5 ${
+                      msg.data.item.isLowStock
+                        ? 'bg-rose-500/10 dark:bg-rose-950/30 border-rose-500/30'
+                        : 'bg-emerald-500/10 dark:bg-emerald-950/30 border-emerald-500/30'
+                    }`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-1.5">
+                            <Package className="w-4 h-4 text-purple-500" />
+                            <span>{msg.data.item.name}</span>
+                          </div>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-700 dark:text-purple-300 font-semibold">
+                            {msg.data.item.category || 'Clinical Supply'}
+                          </span>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 ${
+                          msg.data.item.isLowStock
+                            ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 animate-pulse'
+                            : 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
+                        }`}>
+                          {msg.data.item.isLowStock ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
+                          {msg.data.item.isLowStock ? 'LOW STOCK ALERT' : 'IN STOCK'}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-700 dark:text-slate-300 bg-white/40 dark:bg-slate-900/40 p-2.5 rounded-xl border border-purple-500/15">
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Current Quantity:</span>
+                          <span className="text-sm font-bold text-slate-900 dark:text-white">{msg.data.item.currentStock} {msg.data.item.unit}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Min. Reorder Threshold:</span>
+                          <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">{msg.data.item.minThreshold} {msg.data.item.unit}</span>
+                        </div>
+                        {msg.data.item.supplier && (
+                          <div className="col-span-2">
+                            <span className="text-slate-400 block text-[10px]">Supplier:</span>
+                            <span className="font-medium">{msg.data.item.supplier}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 3. INVENTORY LOW STOCK ALERTS LIST */}
+                  {msg.intent === 'INVENTORY_ALERT' && msg.data?.items && msg.data.items.length > 0 && (
+                    <div className="mt-3 p-3.5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 space-y-2.5">
+                      <div className="flex items-center justify-between text-amber-700 dark:text-amber-400 font-bold text-xs">
+                        <span className="flex items-center gap-1.5">
+                          <AlertTriangle className="w-4 h-4 text-amber-500" />
+                          <span>Low Stock Materials ({msg.data.items.length})</span>
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 font-semibold border border-amber-500/30">
+                          Reorder Urgently
+                        </span>
+                      </div>
+                      <div className="divide-y divide-amber-500/20">
+                        {msg.data.items.map((it, idx) => (
+                          <div key={idx} className="py-2 flex items-center justify-between text-[11px]">
+                            <div>
+                              <div className="font-semibold text-slate-900 dark:text-white">{it.name}</div>
+                              <div className="text-[10px] text-slate-500">{it.category} • Supplier: {it.supplier || 'N/A'}</div>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-bold text-rose-600 dark:text-rose-400">{it.currentStock} {it.unit}</span>
+                              <span className="text-[10px] text-slate-400 block">Min: {it.minThreshold}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 4. EXPENSE RECORDED RECEIPT CARD */}
+                  {msg.intent === 'EXPENSE_RECORDED' && msg.data?.expense && (
+                    <div className="mt-3 p-3.5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Receipt className="w-5 h-5 text-emerald-500" />
+                          <div>
+                            <div className="font-bold text-slate-900 dark:text-white text-base">
+                              ₹{Number(msg.data.expense.amount).toLocaleString('en-IN')}
+                            </div>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-semibold">
+                              {msg.data.expense.category || 'General Expense'}
+                            </span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          {msg.data.expense.expenseDate}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 italic bg-white/40 dark:bg-slate-900/40 p-2 rounded-xl">
+                        "{msg.data.expense.description}"
+                      </p>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between pt-1 border-t border-emerald-500/20">
+                        <span>Payment Mode: <strong className="text-slate-900 dark:text-white">{msg.data.expense.paymentMode || 'Cash'}</strong></span>
+                        <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium"><CheckCircle2 className="w-3 h-3" /> Saved to Ledger</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 5. TODAY QUEUE & SCHEDULE MINI BOARD */}
+                  {msg.intent === 'TODAY_SCHEDULE' && msg.data?.stats && (
+                    <div className="mt-3 p-3.5 rounded-2xl bg-purple-500/10 dark:bg-purple-950/30 border border-purple-500/30 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-1.5">
+                          <Calendar className="w-4 h-4 text-purple-500" />
+                          <span>Today's Live Queue</span>
+                        </span>
+                        <span className="text-xs font-bold text-purple-700 dark:text-purple-300">
+                          {msg.data.stats.totalToday} Scheduled Today
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-1.5 text-center text-[10px]">
+                        <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/25">
+                          <div className="font-bold text-sm text-amber-600 dark:text-amber-400">{msg.data.stats.waiting}</div>
+                          <div className="text-slate-500 text-[9px] mt-0.5">Waiting</div>
+                        </div>
+                        <div className="p-2 rounded-xl bg-blue-500/15 border border-blue-500/25">
+                          <div className="font-bold text-sm text-blue-600 dark:text-blue-400">{msg.data.stats.inChair}</div>
+                          <div className="text-slate-500 text-[9px] mt-0.5">In Chair</div>
+                        </div>
+                        <div className="p-2 rounded-xl bg-emerald-500/15 border border-emerald-500/25">
+                          <div className="font-bold text-sm text-emerald-600 dark:text-emerald-400">{msg.data.stats.completed}</div>
+                          <div className="text-slate-500 text-[9px] mt-0.5">Completed</div>
+                        </div>
+                        <div className="p-2 rounded-xl bg-purple-500/15 border border-purple-500/25">
+                          <div className="font-bold text-sm text-purple-600 dark:text-purple-400">{msg.data.stats.upcoming}</div>
+                          <div className="text-slate-500 text-[9px] mt-0.5">Upcoming</div>
+                        </div>
+                      </div>
+
+                      {onNavigateToAppointments && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onClose();
+                            onNavigateToAppointments();
+                          }}
+                          className="w-full py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all"
+                        >
+                          <span>View Full Appointment Schedule</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   )}
 

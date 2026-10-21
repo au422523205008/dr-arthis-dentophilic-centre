@@ -16,7 +16,12 @@ import {
   Sun,
   Moon,
   Palette,
-  Check
+  Check,
+  Bot,
+  Languages,
+  Key,
+  Cpu,
+  Zap
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -147,6 +152,19 @@ export default function SettingsAndBackup() {
         >
           <Palette className="w-4 h-4" />
           <span>Appearance & Theme</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('AI')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
+            activeTab === 'AI'
+              ? 'bg-purple-600 text-white shadow-sm shadow-purple-600/30'
+              : 'text-slate-400 hover:text-purple-300 hover:bg-purple-500/10'
+          }`}
+        >
+          <Bot className="w-4 h-4" />
+          <span>AI Copilot & Multi-Lingual Engine</span>
         </button>
 
         <button
@@ -294,6 +312,160 @@ export default function SettingsAndBackup() {
               </div>
               <span className="text-[11px] font-mono font-bold text-purple-400">Active Palette</span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: AI COPILOT & MULTI-LINGUAL ENGINE */}
+      {activeTab === 'AI' && (
+        <div className="space-y-6 max-w-4xl">
+          {/* Header & Status Card */}
+          <div className="glass-panel p-6 rounded-2xl border space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-base font-bold flex items-center gap-2">
+                  <Bot className="w-5 h-5 text-purple-400" />
+                  <span>Dentophilic Clinical AI Agent (Mass LLM)</span>
+                </h2>
+                <p className="text-xs opacity-75 mt-1">
+                  Autonomous clinical pair-assistant equipped with multi-lingual conversational intelligence, database function execution, and evidence-based dental pharmacology.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Active & Operational
+                </span>
+              </div>
+            </div>
+
+            {/* Languages Supported Grid */}
+            <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-purple-700 dark:text-purple-300">
+                <Languages className="w-4 h-4" />
+                <span>Active Multi-Lingual Support</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-purple-500/15">
+                  <div className="font-bold text-purple-700 dark:text-purple-300">English</div>
+                  <div className="text-[11px] opacity-75 mt-0.5">Clinical Terminology & FDI Notation</div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-purple-500/15">
+                  <div className="font-bold text-purple-700 dark:text-purple-300">தமிழ் (Tamil)</div>
+                  <div className="text-[11px] opacity-75 mt-0.5">தூய தமிழ் மற்றும் மருத்துவ வழிகாட்டி</div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-purple-500/15">
+                  <div className="font-bold text-purple-700 dark:text-purple-300">Tanglish (Tamil-English)</div>
+                  <div className="text-[11px] opacity-75 mt-0.5">"Inniku evlo patient da", "Priya details"</div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-purple-500/15">
+                  <div className="font-bold text-purple-700 dark:text-purple-300">हिंदी (Hindi)</div>
+                  <div className="text-[11px] opacity-75 mt-0.5">मरीज रिकॉर्ड, अपॉइंटमेंट और दवाइयां</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Operational Database Functions */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400">
+                Connected Clinical Capabilities
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl border border-purple-500/15 bg-white/40 dark:bg-slate-900/40 space-y-1">
+                  <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span className="text-purple-400">🩺</span>
+                    <span>Guided & 1-Shot Patient Onboarding</span>
+                  </div>
+                  <p className="text-[11px] opacity-75">
+                    Registers patients directly into SQLite database with full validation, phone sanitization, demographics, and allergy checks.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-purple-500/15 bg-white/40 dark:bg-slate-900/40 space-y-1">
+                  <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span className="text-purple-400">🔍</span>
+                    <span>Patient Medical Records Search</span>
+                  </div>
+                  <p className="text-[11px] opacity-75">
+                    Instantly looks up patient history, visits count, medical alerts, and provides quick buttons to schedule appointments or open files.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-purple-500/15 bg-white/40 dark:bg-slate-900/40 space-y-1">
+                  <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span className="text-purple-400">📅</span>
+                    <span>Live Clinic Queue & Treatment Chair Flow</span>
+                  </div>
+                  <p className="text-[11px] opacity-75">
+                    Real-time counts of waiting room, in-chair treatment, and completed procedures for the current shift.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-purple-500/15 bg-white/40 dark:bg-slate-900/40 space-y-1">
+                  <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span className="text-purple-400">📦</span>
+                    <span>Inventory Depletion & Low Stock Alerts</span>
+                  </div>
+                  <p className="text-[11px] opacity-75">
+                    Monitors stock levels for Lidocaine, gloves, composite, and articulators with immediate depletion warnings.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-purple-500/15 bg-white/40 dark:bg-slate-900/40 space-y-1">
+                  <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span className="text-purple-400">💰</span>
+                    <span>Direct Expense Logging</span>
+                  </div>
+                  <p className="text-[11px] opacity-75">
+                    Logs expenses straight into clinic accounts ledger from simple voice or chat instructions (e.g. "Record 800 for gloves").
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-purple-500/15 bg-white/40 dark:bg-slate-900/40 space-y-1">
+                  <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span className="text-purple-400">💊</span>
+                    <span>Evidence-Based Dental Pharmacotherapy</span>
+                  </div>
+                  <p className="text-[11px] opacity-75">
+                    Provides dosage protocols for Acute Pulpitis, Dentoalveolar Abscess, Post-Extraction Pain, Pericoronitis, and Aphthous Ulcers.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Cloud LLM Gemini API Key Configuration */}
+            <form onSubmit={handleSaveSettings} className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/20 space-y-3">
+              <div className="flex items-center gap-2">
+                <Key className="w-4 h-4 text-amber-400" />
+                <h3 className="font-bold text-xs text-slate-900 dark:text-white">
+                  Cloud LLM Fallback Configuration (Optional)
+                </h3>
+              </div>
+              <p className="text-[11px] opacity-75 leading-relaxed">
+                Dentophilic includes an embedded, zero-latency clinical intelligence engine that operates without any external API keys. If you want general AI reasoning or broader web research fallbacks, you can optionally enter your Google Gemini API Key here:
+              </p>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Google Gemini API Key
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="password"
+                    placeholder="AIzaSy..."
+                    value={settings.gemini_api_key || ''}
+                    onChange={e => setSettings({ ...settings, gemini_api_key: e.target.value })}
+                    className="flex-1 px-3 py-2 rounded-xl glass-input text-xs font-mono"
+                  />
+                  <button
+                    type="submit"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs cursor-pointer shadow-sm transition-all"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    <span>Save AI Settings</span>
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       )}
